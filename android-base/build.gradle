@@ -43,8 +43,8 @@ dependencies {
 version = "1.0.1"
 
 // 定义两个链接，下面会用到。
-def siteUrl = 'https://github.com/FlexibleXd/flexibleXd' // 项目主页。
-def gitUrl = 'https://github.com/FlexibleXd/flexibleXd.git' // Git仓库的url。
+def siteUrl = 'https://github.com/FlexibleXd/androidbase' // 项目主页。
+def gitUrl = 'https://github.com/FlexibleXd/androidbase.git' // Git仓库的url。
 
 // 唯一包名，比如compile 'com.yanzhenjie:andserver:1.0.1'中的com.yanzhenjie就是这里配置的。
 group = "flexible.xd"

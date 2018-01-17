@@ -11,7 +11,7 @@
         android:layout_height="230dp"
         android:layout_marginLeft="10dp"
         android:layout_marginTop="80dp"
-        android:src="@mipmap/no_net" />
+        android:src="@drawable/no_net" />
 
     <TextView
         android:layout_width="wrap_content"
