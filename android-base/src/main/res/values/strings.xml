@@ -1,0 +1,15 @@
+<resources>
+    <string name="app_name">android-base</string>
+
+    <string name="request_faile">获取失败，请检查网络状态</string>
+    <string name="no_net">网络不可用</string>
+
+    <style name="loading_dialog" parent="android:style/Theme.Dialog">
+        <item name="android:windowFrame">@null</item>
+        <item name="android:windowNoTitle">true</item>
+        <item name="android:windowBackground">@android:color/transparent</item>
+        <item name="android:windowIsFloating">true</item>
+        <item name="android:backgroundDimEnabled">false</item>
+        <item name="android:windowContentOverlay">@null</item>
+    </style>
+</resources>
