@@ -404,7 +404,7 @@ public class AppUtil {
         webSettings.setTextSize(WebSettings.TextSize.NORMAL);//设置字体大小
         webSettings.setUseWideViewPort(false);//设置此属性，可任意比例缩放
         webSettings.setLoadWithOverviewMode(true);
-//        webSettings.setUseWideViewPort(true); //将图片调整到适合webview的大小
+        webSettings.setUseWideViewPort(true); //将图片调整到适合webview的大小
         webSettings.setJavaScriptEnabled(true);
         webSettings.setBuiltInZoomControls(false);
         webSettings.setLayoutAlgorithm(WebSettings.LayoutAlgorithm.SINGLE_COLUMN); //支持内容重新布局
@@ -477,25 +477,25 @@ public class AppUtil {
         return currentVersionCode;
     }
 
-    public static boolean selfPermissionGranted(String permission, Context ctx) {
-        // For Android < Android M, self permissions are always granted.
-        boolean result = true;
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
-
-            if (targetSdkVersion >= Build.VERSION_CODES.M) {
-                // targetSdkVersion >= Android M, we can
-                // use Context#checkSelfPermission
-                result = ctx.checkSelfPermission(permission)
-                        == PackageManager.PERMISSION_GRANTED;
-            } else {
-                // targetSdkVersion < Android M, we have to use PermissionChecker
-                result = PermissionChecker.checkSelfPermission(ctx, permission)
-                        == PermissionChecker.PERMISSION_GRANTED;
-            }
-        }
-
-        return result;
-    }
+//    public static boolean selfPermissionGranted(String permission, Context ctx) {
+//        // For Android < Android M, self permissions are always granted.
+//        boolean result = true;
+//        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
+//
+//            if (targetSdkVersion >= Build.VERSION_CODES.M) {
+//                // targetSdkVersion >= Android M, we can
+//                // use Context#checkSelfPermission
+//                result = ctx.checkSelfPermission(permission)
+//                        == PackageManager.PERMISSION_GRANTED;
+//            } else {
+//                // targetSdkVersion < Android M, we have to use PermissionChecker
+//                result = PermissionChecker.checkSelfPermission(ctx, permission)
+//                        == PermissionChecker.PERMISSION_GRANTED;
+//            }
+//        }
+//
+//        return result;
+//    }
 
 
     /**

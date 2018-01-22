@@ -3,8 +3,8 @@
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:layout_centerInParent="true"
-    android:background="@color/flexible_gray_background"
-    android:gravity="left"
+    android:background="@android:color/transparent"
+    android:gravity="center"
     android:orientation="horizontal"
     android:paddingBottom="20dp"
     android:paddingTop="20dp">

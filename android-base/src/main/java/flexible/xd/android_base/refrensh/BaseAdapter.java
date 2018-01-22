@@ -192,7 +192,7 @@ public abstract class BaseAdapter<T> extends RecyclerView.Adapter<RecyclerView.V
             holderType.add(CT_EMPTY);
             return;
         }
-        if (data.size() == 1) {
+        if (data.size() == 0) {
             if (holderType.get(0) == CT_EMPTY)
                 return;
         }
@@ -327,6 +327,9 @@ public abstract class BaseAdapter<T> extends RecyclerView.Adapter<RecyclerView.V
             gridManager.setSpanSizeLookup(new GridLayoutManager.SpanSizeLookup() {
                 @Override
                 public int getSpanSize(int position) {
+                    if (isEmptyView(position)) {
+                        return gridManager.getSpanCount();
+                    }
                     if (isFooterView(position)) {
                         return gridManager.getSpanCount();
                     }
@@ -339,6 +342,11 @@ public abstract class BaseAdapter<T> extends RecyclerView.Adapter<RecyclerView.V
 
     private boolean isFooterView(int pos) {
         return holderType.get(pos) == FOOT;
+    }
+
+
+    private boolean isEmptyView(int pos) {
+        return holderType.get(pos) == CT_EMPTY;
     }
 
 
