@@ -1,14 +1,17 @@
 package flexible.xd.android_base.utils;
 
+import android.Manifest;
 import android.app.Activity;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.content.pm.PackageManager;
 import android.database.Cursor;
 import android.graphics.Bitmap;
 import android.net.Uri;
 import android.os.Build;
 import android.os.Environment;
 import android.provider.MediaStore;
+import android.support.v4.content.ContextCompat;
 import android.support.v4.content.FileProvider;
 import android.support.v7.app.AlertDialog;
 
@@ -59,7 +62,7 @@ public class AvatarMananger {
         return instance;
     }
 
-    public static AvatarMananger newInstance(Activity activity,String appId) {
+    public static AvatarMananger newInstance(Activity activity, String appId) {
         act = activity;
         if (null == instance)
             instance = new AvatarMananger(appId);
@@ -108,6 +111,11 @@ public class AvatarMananger {
      * 打开图库
      */
     public void openAlbum() {
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M &&
+                PackageManager.PERMISSION_GRANTED == ContextCompat.checkSelfPermission(act, Manifest.permission.READ_EXTERNAL_STORAGE)) {
+            ToastUtil.showToast(act, "请手动开启sd卡权限");
+            return;
+        }
         Intent intent = new Intent(Intent.ACTION_PICK,
                 MediaStore.Images.Media.EXTERNAL_CONTENT_URI);
         act.startActivityForResult(intent, AVATER_ALBUM);
@@ -117,6 +125,11 @@ public class AvatarMananger {
      * 打开图库
      */
     public void openAlbum(int id) {
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M &&
+                PackageManager.PERMISSION_GRANTED == ContextCompat.checkSelfPermission(act, Manifest.permission.READ_EXTERNAL_STORAGE)) {
+            ToastUtil.showToast(act, "请手动开启sd卡权限");
+            return;
+        }
         Intent intent = new Intent(Intent.ACTION_PICK,
                 MediaStore.Images.Media.EXTERNAL_CONTENT_URI);
         act.startActivityForResult(intent, id);
@@ -126,6 +139,16 @@ public class AvatarMananger {
      * 拍照
      */
     public void takePic() {
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M &&
+                PackageManager.PERMISSION_GRANTED == ContextCompat.checkSelfPermission(act, android.Manifest.permission.CAMERA)) {
+            ToastUtil.showToast(act, "请手动开启拍照片权限");
+            return;
+        }
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M &&
+                PackageManager.PERMISSION_GRANTED == ContextCompat.checkSelfPermission(act, Manifest.permission.READ_EXTERNAL_STORAGE)) {
+            ToastUtil.showToast(act, "请手动开启sd卡权限");
+            return;
+        }
         Intent intent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {
             lastUri = FileProvider.getUriForFile(act, appId + ".fileprovider", createFile());
@@ -140,6 +163,16 @@ public class AvatarMananger {
      * 拍照
      */
     public void takePic(int id) {
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M &&
+                PackageManager.PERMISSION_GRANTED == ContextCompat.checkSelfPermission(act, android.Manifest.permission.CAMERA)) {
+            ToastUtil.showToast(act, "请手动开启拍照片权限");
+            return;
+        }
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M &&
+                PackageManager.PERMISSION_GRANTED == ContextCompat.checkSelfPermission(act, Manifest.permission.READ_EXTERNAL_STORAGE)) {
+            ToastUtil.showToast(act, "请手动开启sd卡权限");
+            return;
+        }
         Intent intent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {
             lastUri = FileProvider.getUriForFile(act, appId + ".fileprovider", createFile());
