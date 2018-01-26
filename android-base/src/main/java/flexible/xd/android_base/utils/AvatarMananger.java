@@ -38,11 +38,21 @@ public class AvatarMananger {
 
 
     private AvatarMananger() {
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M &&
+                PackageManager.PERMISSION_DENIED  == ContextCompat.checkSelfPermission(act, Manifest.permission.READ_EXTERNAL_STORAGE)) {
+            ToastUtil.showToast(act, "请手动开启sd卡权限");
+            return;
+        }
         deleterFile();
         newDirectory();
     }
 
     private AvatarMananger(String appId) {
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M &&
+                PackageManager.PERMISSION_DENIED  == ContextCompat.checkSelfPermission(act, Manifest.permission.READ_EXTERNAL_STORAGE)) {
+            ToastUtil.showToast(act, "请手动开启sd卡权限");
+            return;
+        }
         this.appId = appId;
         deleterFile();
         newDirectory();
@@ -112,7 +122,7 @@ public class AvatarMananger {
      */
     public void openAlbum() {
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M &&
-                PackageManager.PERMISSION_GRANTED == ContextCompat.checkSelfPermission(act, Manifest.permission.READ_EXTERNAL_STORAGE)) {
+                PackageManager.PERMISSION_DENIED  == ContextCompat.checkSelfPermission(act, Manifest.permission.READ_EXTERNAL_STORAGE)) {
             ToastUtil.showToast(act, "请手动开启sd卡权限");
             return;
         }
@@ -126,7 +136,7 @@ public class AvatarMananger {
      */
     public void openAlbum(int id) {
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M &&
-                PackageManager.PERMISSION_GRANTED == ContextCompat.checkSelfPermission(act, Manifest.permission.READ_EXTERNAL_STORAGE)) {
+                PackageManager.PERMISSION_DENIED  == ContextCompat.checkSelfPermission(act, Manifest.permission.READ_EXTERNAL_STORAGE)) {
             ToastUtil.showToast(act, "请手动开启sd卡权限");
             return;
         }
@@ -140,12 +150,12 @@ public class AvatarMananger {
      */
     public void takePic() {
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M &&
-                PackageManager.PERMISSION_GRANTED == ContextCompat.checkSelfPermission(act, android.Manifest.permission.CAMERA)) {
+                PackageManager.PERMISSION_DENIED  == ContextCompat.checkSelfPermission(act, android.Manifest.permission.CAMERA)) {
             ToastUtil.showToast(act, "请手动开启拍照片权限");
             return;
         }
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M &&
-                PackageManager.PERMISSION_GRANTED == ContextCompat.checkSelfPermission(act, Manifest.permission.READ_EXTERNAL_STORAGE)) {
+                PackageManager.PERMISSION_DENIED  == ContextCompat.checkSelfPermission(act, Manifest.permission.READ_EXTERNAL_STORAGE)) {
             ToastUtil.showToast(act, "请手动开启sd卡权限");
             return;
         }
@@ -164,12 +174,12 @@ public class AvatarMananger {
      */
     public void takePic(int id) {
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M &&
-                PackageManager.PERMISSION_GRANTED == ContextCompat.checkSelfPermission(act, android.Manifest.permission.CAMERA)) {
+                PackageManager.PERMISSION_DENIED  == ContextCompat.checkSelfPermission(act, android.Manifest.permission.CAMERA)) {
             ToastUtil.showToast(act, "请手动开启拍照片权限");
             return;
         }
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M &&
-                PackageManager.PERMISSION_GRANTED == ContextCompat.checkSelfPermission(act, Manifest.permission.READ_EXTERNAL_STORAGE)) {
+                PackageManager.PERMISSION_DENIED  == ContextCompat.checkSelfPermission(act, Manifest.permission.READ_EXTERNAL_STORAGE)) {
             ToastUtil.showToast(act, "请手动开启sd卡权限");
             return;
         }

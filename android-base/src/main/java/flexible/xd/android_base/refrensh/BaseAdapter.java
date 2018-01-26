@@ -94,7 +94,7 @@ public abstract class BaseAdapter<T> extends RecyclerView.Adapter<RecyclerView.V
         if (isFootCell(holderType.get(position))) {
             if (isLoading) {
                 LoadMoreVHolder loadMoreVHolder = (LoadMoreVHolder) holder;
-                loadMoreVHolder.setHasMore(isLoading);
+                loadMoreVHolder.setHasMore(true);
                 return;
             }
             onBindFootVHolder(holder, position);
@@ -187,17 +187,11 @@ public abstract class BaseAdapter<T> extends RecyclerView.Adapter<RecyclerView.V
     }
 
     public void init() {
+        holderType.clear();
         if (data.size() == 0) {
-            holderType.clear();
             holderType.add(CT_EMPTY);
             return;
         }
-        if (data.size() == 0) {
-            if (holderType.get(0) == CT_EMPTY)
-                return;
-        }
-        holderType.clear();
-        LogUtils.LOGE("z", data + "");
         for (int i = 0; i < data.size(); i++) {
             holderType.add(CELL);
         }
@@ -211,8 +205,8 @@ public abstract class BaseAdapter<T> extends RecyclerView.Adapter<RecyclerView.V
     private boolean isLoading = false;
 
     public void setLoading(boolean loading) {
-        init();
         isLoading = loading;
+        init();
     }
 
     public void setLoadEnable(boolean loadEnable) {
@@ -243,10 +237,9 @@ public abstract class BaseAdapter<T> extends RecyclerView.Adapter<RecyclerView.V
                 super.onScrolled(recyclerView, dx, dy);
                 if (isAutoLoad && findLastVisibleItemPosition(layoutManager) + 1 == getItemCount()) {
                     scrollLoadMore();
+                } else if (isAutoLoad) {
+                    isAutoLoad = false;
                 }
-//                else if (isAutoLoad) {
-//                    isAutoLoad = false;
-//                }
             }
         });
     }
@@ -290,7 +283,6 @@ public abstract class BaseAdapter<T> extends RecyclerView.Adapter<RecyclerView.V
 
     @Override
     public void loadMore() {
-        LogUtils.LOGE("base", "loadmore--------------------start");
         loadMoreListener.loadMore();
     }
 
