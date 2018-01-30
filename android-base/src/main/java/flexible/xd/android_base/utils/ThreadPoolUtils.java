@@ -1,5 +1,9 @@
 package flexible.xd.android_base.utils;
 
+import android.support.annotation.IntDef;
+
+import java.lang.annotation.Retention;
+import java.lang.annotation.RetentionPolicy;
 import java.util.Collection;
 import java.util.List;
 import java.util.concurrent.Callable;
@@ -16,20 +20,27 @@ import java.util.concurrent.TimeoutException;
  * <pre>
  *     author: Blankj
  *     blog  : http://blankj.com
- *     time  : 2016/8/25
+ *     time  : 2016/08/25
  *     desc  : 线程池相关工具类
  * </pre>
  */
-public class ThreadPoolUtils {
+public final class ThreadPoolUtils {
 
-    public enum Type {
-        FixedThread,
-        CachedThread,
-        SingleThread,
+    public static final int FixedThread  = 0;
+    public static final int CachedThread = 1;
+    public static final int SingleThread = 2;
+
+    @IntDef({FixedThread, CachedThread, SingleThread})
+    @Retention(RetentionPolicy.SOURCE)
+    public @interface Type {
     }
 
-    private ExecutorService exec;
+    private ExecutorService          exec;
     private ScheduledExecutorService scheduleExec;
+
+    private ThreadPoolUtils() {
+        throw new UnsupportedOperationException("u can't instantiate me...");
+    }
 
     /**
      * ThreadPoolUtils构造函数
@@ -37,29 +48,49 @@ public class ThreadPoolUtils {
      * @param type         线程池类型
      * @param corePoolSize 只对Fixed和Scheduled线程池起效
      */
-    public ThreadPoolUtils(Type type, int corePoolSize) {
+    public ThreadPoolUtils(@Type final int type, final int corePoolSize) {
         // 构造有定时功能的线程池
-        // ThreadPoolExecutor(corePoolSize, Integer.MAX_VALUE, 10L, TimeUnit.MILLISECONDS, new BlockingQueue<Runnable>)
+//        new ThreadPoolExecutor(
+//                corePoolSize,
+//                Integer.MAX_VALUE,
+//                10L,
+//                TimeUnit.MILLISECONDS,
+//                new DelayedWorkQueue()
+//        );
         scheduleExec = Executors.newScheduledThreadPool(corePoolSize);
         switch (type) {
             case FixedThread:
                 // 构造一个固定线程数目的线程池
-                // ThreadPoolExecutor(corePoolSize, corePoolSize, 0L, TimeUnit.MILLISECONDS, new
-                // LinkedBlockingQueue<Runnable>());
+//                new ThreadPoolExecutor(
+//                        corePoolSize,
+//                        corePoolSize,
+//                        0L,
+//                        TimeUnit.MILLISECONDS,
+//                        new LinkedBlockingQueue<Runnable>()
+//                );
                 exec = Executors.newFixedThreadPool(corePoolSize);
                 break;
             case SingleThread:
                 // 构造一个只支持一个线程的线程池,相当于newFixedThreadPool(1)
-                // ThreadPoolExecutor(1, 1, 0L, TimeUnit.MILLISECONDS, new LinkedBlockingQueue<Runnable>())
+//                new ThreadPoolExecutor(
+//                        1,
+//                        1,
+//                        0L,
+//                        TimeUnit.MILLISECONDS,
+//                        new LinkedBlockingQueue<Runnable>()
+//                );
                 exec = Executors.newSingleThreadExecutor();
                 break;
             case CachedThread:
                 // 构造一个缓冲功能的线程池
-                // ThreadPoolExecutor(0, Integer.MAX_VALUE, 60L, TimeUnit.SECONDS, new SynchronousQueue<Runnable>());
+//                new ThreadPoolExecutor(
+//                        0,
+//                        Integer.MAX_VALUE,
+//                        60L,
+//                        TimeUnit.SECONDS,
+//                        new SynchronousQueue<Runnable>()
+//                );
                 exec = Executors.newCachedThreadPool();
-                break;
-            default:
-                exec = scheduleExec;
                 break;
         }
     }
@@ -70,7 +101,7 @@ public class ThreadPoolUtils {
      *
      * @param command 命令
      */
-    public void execute(Runnable command) {
+    public void execute(final Runnable command) {
         exec.execute(command);
     }
 
@@ -80,7 +111,7 @@ public class ThreadPoolUtils {
      *
      * @param commands 命令链表
      */
-    public void execute(List<Runnable> commands) {
+    public void execute(final List<Runnable> commands) {
         for (Runnable command : commands) {
             exec.execute(command);
         }
@@ -133,8 +164,10 @@ public class ThreadPoolUtils {
      * @param timeout 最长等待时间
      * @param unit    时间单位
      * @return {@code true}: 请求成功<br>{@code false}: 请求超时
+     * @throws InterruptedException 终端异常
      */
-    public boolean awaitTermination(long timeout, TimeUnit unit) throws InterruptedException {
+    public boolean awaitTermination(final long timeout, final TimeUnit unit)
+            throws InterruptedException {
         return exec.awaitTermination(timeout, unit);
     }
 
@@ -143,9 +176,10 @@ public class ThreadPoolUtils {
      * <p>如果想立即阻塞任务的等待，则可以使用{@code result = exec.submit(aCallable).get();}形式的构造。</p>
      *
      * @param task 任务
+     * @param <T>  泛型
      * @return 表示任务等待完成的Future, 该Future的{@code get}方法在成功完成时将会返回该任务的结果。
      */
-    public <T> Future<T> submit(Callable<T> task) {
+    public <T> Future<T> submit(final Callable<T> task) {
         return exec.submit(task);
     }
 
@@ -154,9 +188,10 @@ public class ThreadPoolUtils {
      *
      * @param task   任务
      * @param result 返回的结果
+     * @param <T>    泛型
      * @return 表示任务等待完成的Future, 该Future的{@code get}方法在成功完成时将会返回该任务的结果。
      */
-    public <T> Future<T> submit(Runnable task, T result) {
+    public <T> Future<T> submit(final Runnable task, final T result) {
         return exec.submit(task, result);
     }
 
@@ -166,7 +201,7 @@ public class ThreadPoolUtils {
      * @param task 任务
      * @return 表示任务等待完成的Future, 该Future的{@code get}方法在成功完成时将会返回null结果。
      */
-    public Future<?> submit(Runnable task) {
+    public Future<?> submit(final Runnable task) {
         return exec.submit(task);
     }
 
@@ -178,10 +213,12 @@ public class ThreadPoolUtils {
      * 如果正在进行此操作时修改了给定的 collection，则此方法的结果是不确定的。</p>
      *
      * @param tasks 任务集合
+     * @param <T>   泛型
      * @return 表示任务的 Future 列表，列表顺序与给定任务列表的迭代器所生成的顺序相同，每个任务都已完成。
      * @throws InterruptedException 如果等待时发生中断，在这种情况下取消尚未完成的任务。
      */
-    public <T> List<Future<T>> invokeAll(Collection<? extends Callable<T>> tasks) throws InterruptedException {
+    public <T> List<Future<T>> invokeAll(final Collection<? extends Callable<T>> tasks)
+            throws InterruptedException {
         return exec.invokeAll(tasks);
     }
 
@@ -196,11 +233,15 @@ public class ThreadPoolUtils {
      * @param tasks   任务集合
      * @param timeout 最长等待时间
      * @param unit    时间单位
-     * @return 表示任务的 Future 列表，列表顺序与给定任务列表的迭代器所生成的顺序相同。如果操作未超时，则已完成所有任务。如果确实超时了，则某些任务尚未完成。
+     * @param <T>     泛型
+     * @return 表示任务的 Future 列表，列表顺序与给定任务列表的迭代器所生成的顺序相同。
+     * 如果操作未超时，则已完成所有任务。如果确实超时了，则某些任务尚未完成。
      * @throws InterruptedException 如果等待时发生中断，在这种情况下取消尚未完成的任务
      */
-    public <T> List<Future<T>> invokeAll(Collection<? extends Callable<T>> tasks, long timeout, TimeUnit unit) throws
-            InterruptedException {
+    public <T> List<Future<T>> invokeAll(final Collection<? extends Callable<T>> tasks,
+                                         final long timeout,
+                                         final TimeUnit unit)
+            throws InterruptedException {
         return exec.invokeAll(tasks, timeout, unit);
     }
 
@@ -211,11 +252,13 @@ public class ThreadPoolUtils {
      * 如果此操作正在进行时修改了给定的collection，则此方法的结果是不确定的。</p>
      *
      * @param tasks 任务集合
+     * @param <T>   泛型
      * @return 某个任务返回的结果
      * @throws InterruptedException 如果等待时发生中断
      * @throws ExecutionException   如果没有任务成功完成
      */
-    public <T> T invokeAny(Collection<? extends Callable<T>> tasks) throws InterruptedException, ExecutionException {
+    public <T> T invokeAny(final Collection<? extends Callable<T>> tasks)
+            throws InterruptedException, ExecutionException {
         return exec.invokeAny(tasks);
     }
 
@@ -228,13 +271,16 @@ public class ThreadPoolUtils {
      * @param tasks   任务集合
      * @param timeout 最长等待时间
      * @param unit    时间单位
+     * @param <T>     泛型
      * @return 某个任务返回的结果
      * @throws InterruptedException 如果等待时发生中断
      * @throws ExecutionException   如果没有任务成功完成
      * @throws TimeoutException     如果在所有任务成功完成之前给定的超时期满
      */
-    public <T> T invokeAny(Collection<? extends Callable<T>> tasks, long timeout, TimeUnit unit) throws
-            InterruptedException, ExecutionException, TimeoutException {
+    public <T> T invokeAny(final Collection<? extends Callable<T>> tasks,
+                           final long timeout,
+                           final TimeUnit unit)
+            throws InterruptedException, ExecutionException, TimeoutException {
         return exec.invokeAny(tasks, timeout, unit);
     }
 
@@ -246,7 +292,9 @@ public class ThreadPoolUtils {
      * @param unit    单位
      * @return 表示挂起任务完成的ScheduledFuture，并且其{@code get()}方法在完成后将返回{@code null}
      */
-    public ScheduledFuture<?> schedule(Runnable command, long delay, TimeUnit unit) {
+    public ScheduledFuture<?> schedule(final Runnable command,
+                                       final long delay,
+                                       final TimeUnit unit) {
         return scheduleExec.schedule(command, delay, unit);
     }
 
@@ -256,9 +304,12 @@ public class ThreadPoolUtils {
      * @param callable 命令
      * @param delay    延迟时间
      * @param unit     时间单位
+     * @param <V>      泛型
      * @return 可用于提取结果或取消的ScheduledFuture
      */
-    public <V> ScheduledFuture<V> schedule(Callable<V> callable, long delay, TimeUnit unit) {
+    public <V> ScheduledFuture<V> schedule(final Callable<V> callable,
+                                           final long delay,
+                                           final TimeUnit unit) {
         return scheduleExec.schedule(callable, delay, unit);
     }
 
@@ -271,7 +322,10 @@ public class ThreadPoolUtils {
      * @param unit         时间单位
      * @return 表示挂起任务完成的ScheduledFuture，并且其{@code get()}方法在取消后将抛出异常
      */
-    public ScheduledFuture<?> scheduleWithFixedRate(Runnable command, long initialDelay, long period, TimeUnit unit) {
+    public ScheduledFuture<?> scheduleWithFixedRate(final Runnable command,
+                                                    final long initialDelay,
+                                                    final long period,
+                                                    final TimeUnit unit) {
         return scheduleExec.scheduleAtFixedRate(command, initialDelay, period, unit);
     }
 
@@ -284,7 +338,10 @@ public class ThreadPoolUtils {
      * @param unit         时间单位
      * @return 表示挂起任务完成的ScheduledFuture，并且其{@code get()}方法在取消后将抛出异常
      */
-    public ScheduledFuture<?> scheduleWithFixedDelay(Runnable command, long initialDelay, long delay, TimeUnit unit) {
+    public ScheduledFuture<?> scheduleWithFixedDelay(final Runnable command,
+                                                     final long initialDelay,
+                                                     final long delay,
+                                                     final TimeUnit unit) {
         return scheduleExec.scheduleWithFixedDelay(command, initialDelay, delay, unit);
     }
 }

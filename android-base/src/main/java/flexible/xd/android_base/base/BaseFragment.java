@@ -16,6 +16,8 @@ import flexible.xd.android_base.network.NoHttpListener;
 import flexible.xd.android_base.network.NoHttpManager;
 import flexible.xd.android_base.utils.ToastUtil;
 
+import static flexible.xd.android_base.utils.ToastUtil.showShort;
+
 /**
  * Created by flexibleXd on 2016/12/22.
  */
@@ -65,7 +67,7 @@ public class BaseFragment extends Fragment implements View.OnClickListener {
     }
 
     public void toast(String content) {
-        ToastUtil.showToast(XdApp.getAppContext(), content);
+        showShort( content);
     }
 
     private Object cancelObject = new Object();

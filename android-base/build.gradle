@@ -26,8 +26,7 @@ android {
 }
 
 dependencies {
-    implementation fileTree(dir: 'libs', include: ['*.jar'])
-
+    implementation fileTree(include: ['*.jar'], dir: 'libs')
     implementation 'com.android.support:appcompat-v7:26.1.0'
     testImplementation 'junit:junit:4.12'
     androidTestImplementation 'com.android.support.test:runner:1.0.1'
@@ -38,10 +37,11 @@ dependencies {
     compile 'com.yolanda.nohttp:nohttp:1.1.1'
     compile 'com.jakewharton:butterknife:8.5.1'
     compile 'com.android.support:recyclerview-v7:26.1.0'
+    implementation 'com.android.support:design:26.1.0'
 }
 
 // 项目引用的版本号
-version = "1.0.11"
+version = "1.0.12"
 
 // 定义两个链接，下面会用到。
 def siteUrl = 'https://github.com/FlexibleXd/androidbase' // 项目主页。

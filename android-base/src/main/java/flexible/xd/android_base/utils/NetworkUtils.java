@@ -1,165 +1,290 @@
 package flexible.xd.android_base.utils;
 
+import android.annotation.SuppressLint;
 import android.content.Context;
 import android.content.Intent;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
+import android.net.wifi.WifiManager;
 import android.telephony.TelephonyManager;
+import android.util.Log;
+
+
+import java.lang.reflect.Method;
+import java.net.InetAddress;
+import java.net.NetworkInterface;
+import java.net.SocketException;
+import java.net.UnknownHostException;
+import java.util.Enumeration;
 
 /**
  * <pre>
  *     author: Blankj
  *     blog  : http://blankj.com
- *     time  : 2016/8/2
+ *     time  : 2016/08/02
  *     desc  : 网络相关工具类
  * </pre>
  */
-public class NetworkUtils {
+public final class NetworkUtils {
 
     private NetworkUtils() {
-        throw new UnsupportedOperationException("u can't fuck me...");
+        throw new UnsupportedOperationException("u can't instantiate me...");
     }
 
-    public static final int NETWORK_WIFI = 1;    // wifi network
-    public static final int NETWORK_4G = 4;    // "4G" networks
-    public static final int NETWORK_3G = 3;    // "3G" networks
-    public static final int NETWORK_2G = 2;    // "2G" networks
-    public static final int NETWORK_UNKNOWN = 5;    // unknown network
-    public static final int NETWORK_NO = -1;   // no network
-
-    private static final int NETWORK_TYPE_GSM = 16;
-    private static final int NETWORK_TYPE_TD_SCDMA = 17;
-    private static final int NETWORK_TYPE_IWLAN = 18;
+    public enum NetworkType {
+        NETWORK_WIFI,
+        NETWORK_4G,
+        NETWORK_3G,
+        NETWORK_2G,
+        NETWORK_UNKNOWN,
+        NETWORK_NO
+    }
 
     /**
      * 打开网络设置界面
-     * <p>3.0以下打开设置界面</p>
-     *
-     * @param context 上下文
      */
-    public static void openWirelessSettings(Context context) {
-        if (android.os.Build.VERSION.SDK_INT > 10) {
-            context.startActivity(new Intent(android.provider.Settings.ACTION_SETTINGS));
-        } else {
-            context.startActivity(new Intent(android.provider.Settings.ACTION_WIRELESS_SETTINGS));
-        }
+    public static void openWirelessSettings() {
+        Utils.getApp().startActivity(new Intent(android.provider.Settings.ACTION_WIRELESS_SETTINGS)
+                .setFlags(Intent.FLAG_ACTIVITY_NEW_TASK));
     }
 
     /**
      * 获取活动网络信息
+     * <p>需添加权限
+     * {@code <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />}</p>
      *
-     * @param context 上下文
      * @return NetworkInfo
      */
-    private static NetworkInfo getActiveNetworkInfo(Context context) {
-        ConnectivityManager cm = (ConnectivityManager) context
-                .getSystemService(Context.CONNECTIVITY_SERVICE);
-        return cm.getActiveNetworkInfo();
-    }
-
-    /**
-     * 判断网络是否可用
-     * <p>需添加权限 {@code <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE"/>}</p>
-     *
-     * @param context 上下文
-     * @return {@code true}: 可用<br>{@code false}: 不可用
-     */
-    public static boolean isAvailable(Context context) {
-        NetworkInfo info = getActiveNetworkInfo(context);
-        return info != null && info.isAvailable();
+    @SuppressLint("MissingPermission")
+    private static NetworkInfo getActiveNetworkInfo() {
+        ConnectivityManager manager =
+                (ConnectivityManager) Utils.getApp().getSystemService(Context.CONNECTIVITY_SERVICE);
+        if (manager == null) return null;
+        return manager.getActiveNetworkInfo();
     }
 
     /**
      * 判断网络是否连接
-     * <p>需添加权限 {@code <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE"/>}</p>
+     * <p>需添加权限
+     * {@code <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />}</p>
      *
-     * @param context 上下文
      * @return {@code true}: 是<br>{@code false}: 否
      */
-    public static boolean isConnected(Context context) {
-        NetworkInfo info = getActiveNetworkInfo(context);
+    public static boolean isConnected() {
+        NetworkInfo info = getActiveNetworkInfo();
         return info != null && info.isConnected();
     }
 
     /**
-     * 判断网络是否是4G
-     * <p>需添加权限 {@code <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE"/>}</p>
+     * 判断网络是否可用
+     * <p>需添加权限 {@code <uses-permission android:name="android.permission.INTERNET" />}</p>
+     * <p>需要异步 ping，如果 ping 不通就说明网络不可用</p>
+     * <p>ping 的 ip 为阿里巴巴公共 ip：223.5.5.5</p>
      *
-     * @param context 上下文
-     * @return {@code true}: 是<br>{@code false}: 不是
+     * @return {@code true}: 可用<br>{@code false}: 不可用
      */
-    public static boolean is4G(Context context) {
-        NetworkInfo info = getActiveNetworkInfo(context);
-        return info != null && info.isAvailable() && info.getSubtype() == TelephonyManager.NETWORK_TYPE_LTE;
+    public static boolean isAvailableByPing() {
+        return isAvailableByPing(null);
     }
 
     /**
-     * 判断wifi是否连接状态
-     * <p>需添加权限 {@code <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE"/>}</p>
+     * 判断网络是否可用
+     * <p>需添加权限 {@code <uses-permission android:name="android.permission.INTERNET" />}</p>
+     * <p>需要异步 ping，如果 ping 不通就说明网络不可用</p>
      *
-     * @param context 上下文
+     * @param ip ip 地址（自己服务器 ip），如果为空，ip 为阿里巴巴公共 ip
+     * @return {@code true}: 可用<br>{@code false}: 不可用
+     */
+    public static boolean isAvailableByPing(String ip) {
+        if (ip == null || ip.length() <= 0) {
+            ip = "223.5.5.5";// 阿里巴巴公共 ip
+        }
+        ShellUtils.CommandResult result = ShellUtils.execCmd(String.format("ping -c 1 %s", ip), false);
+        boolean ret = result.result == 0;
+        if (result.errorMsg != null) {
+            Log.d("NetworkUtils", "isAvailableByPing() called" + result.errorMsg);
+        }
+        if (result.successMsg != null) {
+            Log.d("NetworkUtils", "isAvailableByPing() called" + result.successMsg);
+        }
+        return ret;
+    }
+
+    /**
+     * 判断移动数据是否打开
+     *
+     * @return {@code true}: 是<br>{@code false}: 否
+     */
+    public static boolean getMobileDataEnabled() {
+        try {
+            TelephonyManager tm =
+                    (TelephonyManager) Utils.getApp().getSystemService(Context.TELEPHONY_SERVICE);
+            if (tm == null) return false;
+            @SuppressLint("PrivateApi")
+            Method getMobileDataEnabledMethod = tm.getClass().getDeclaredMethod("getDataEnabled");
+            if (null != getMobileDataEnabledMethod) {
+                return (boolean) getMobileDataEnabledMethod.invoke(tm);
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return false;
+    }
+
+    /**
+     * 打开或关闭移动数据
+     * <p>需系统应用 需添加权限
+     * {@code <uses-permission android:name="android.permission.MODIFY_PHONE_STATE" />}</p>
+     *
+     * @param enabled {@code true}: 打开<br>{@code false}: 关闭
+     */
+    public static void setMobileDataEnabled(final boolean enabled) {
+        try {
+            TelephonyManager tm =
+                    (TelephonyManager) Utils.getApp().getSystemService(Context.TELEPHONY_SERVICE);
+            if (tm == null) return;
+            Method setMobileDataEnabledMethod =
+                    tm.getClass().getDeclaredMethod("setDataEnabled", boolean.class);
+            if (null != setMobileDataEnabledMethod) {
+                setMobileDataEnabledMethod.invoke(tm, enabled);
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+
+    /**
+     * 判断网络是否是移动数据
+     * <p>需添加权限
+     * {@code <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />}</p>
+     *
+     * @return {@code true}: 是<br>{@code false}: 否
+     */
+    @SuppressLint("MissingPermission")
+    public static boolean isMobileData() {
+        NetworkInfo info = getActiveNetworkInfo();
+        return null != info
+                && info.isAvailable()
+                && info.getType() == ConnectivityManager.TYPE_MOBILE;
+    }
+
+    /**
+     * 判断网络是否是 4G
+     * <p>需添加权限
+     * {@code <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />}</p>
+     *
+     * @return {@code true}: 是<br>{@code false}: 否
+     */
+    public static boolean is4G() {
+        NetworkInfo info = getActiveNetworkInfo();
+        return info != null
+                && info.isAvailable()
+                && info.getSubtype() == TelephonyManager.NETWORK_TYPE_LTE;
+    }
+
+    /**
+     * 判断 wifi 是否打开
+     * <p>需添加权限
+     * {@code <uses-permission android:name="android.permission.ACCESS_WIFI_STATE" />}</p>
+     *
+     * @return {@code true}: 是<br>{@code false}: 否
+     */
+    public static boolean getWifiEnabled() {
+        @SuppressLint("WifiManagerLeak")
+        WifiManager manager = (WifiManager) Utils.getApp().getSystemService(Context.WIFI_SERVICE);
+        return manager != null && manager.isWifiEnabled();
+    }
+
+    /**
+     * 打开或关闭 wifi
+     * <p>需添加权限
+     * {@code <uses-permission android:name="android.permission.CHANGE_WIFI_STATE" />}</p>
+     *
+     * @param enabled {@code true}: 打开<br>{@code false}: 关闭
+     */
+    @SuppressLint("MissingPermission")
+    public static void setWifiEnabled(final boolean enabled) {
+        @SuppressLint("WifiManagerLeak")
+        WifiManager manager = (WifiManager) Utils.getApp().getSystemService(Context.WIFI_SERVICE);
+        if (manager == null) return;
+        if (enabled) {
+            if (!manager.isWifiEnabled()) {
+                manager.setWifiEnabled(true);
+            }
+        } else {
+            if (manager.isWifiEnabled()) {
+                manager.setWifiEnabled(false);
+            }
+        }
+    }
+
+    /**
+     * 判断 wifi 是否连接状态
+     * <p>需添加权限
+     * {@code <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />}</p>
+     *
      * @return {@code true}: 连接<br>{@code false}: 未连接
      */
-    public static boolean isWifiConnected(Context context) {
-        ConnectivityManager cm = (ConnectivityManager) context
-                .getSystemService(Context.CONNECTIVITY_SERVICE);
-        return cm != null && cm.getActiveNetworkInfo().getType() == ConnectivityManager.TYPE_WIFI;
+    @SuppressLint("MissingPermission")
+    public static boolean isWifiConnected() {
+        ConnectivityManager cm =
+                (ConnectivityManager) Utils.getApp().getSystemService(Context.CONNECTIVITY_SERVICE);
+        return cm != null
+                && cm.getActiveNetworkInfo() != null
+                && cm.getActiveNetworkInfo().getType() == ConnectivityManager.TYPE_WIFI;
     }
 
     /**
-     * 获取移动网络运营商名称
-     * <p>如中国联通、中国移动、中国电信</p>
+     * 判断 wifi 数据是否可用
+     * <p>需添加权限
+     * {@code <uses-permission android:name="android.permission.ACCESS_WIFI_STATE" />}</p>
+     * <p>需添加权限
+     * {@code <uses-permission android:name="android.permission.INTERNET" />}</p>
      *
-     * @param context 上下文
-     * @return 移动网络运营商名称
+     * @return {@code true}: 是<br>{@code false}: 否
      */
-    public static String getNetworkOperatorName(Context context) {
-        TelephonyManager tm = (TelephonyManager) context
-                .getSystemService(Context.TELEPHONY_SERVICE);
+    public static boolean isWifiAvailable() {
+        return getWifiEnabled() && isAvailableByPing();
+    }
+
+    /**
+     * 获取网络运营商名称
+     * <p>中国移动、如中国联通、中国电信</p>
+     *
+     * @return 运营商名称
+     */
+    public static String getNetworkOperatorName() {
+        TelephonyManager tm =
+                (TelephonyManager) Utils.getApp().getSystemService(Context.TELEPHONY_SERVICE);
         return tm != null ? tm.getNetworkOperatorName() : null;
     }
 
-    /**
-     * 获取移动终端类型
-     *
-     * @param context 上下文
-     * @return 手机制式
-     * <ul>
-     * <li>{@link TelephonyManager#PHONE_TYPE_NONE } : 0 手机制式未知</li>
-     * <li>{@link TelephonyManager#PHONE_TYPE_GSM  } : 1 手机制式为GSM，移动和联通</li>
-     * <li>{@link TelephonyManager#PHONE_TYPE_CDMA } : 2 手机制式为CDMA，电信</li>
-     * <li>{@link TelephonyManager#PHONE_TYPE_SIP  } : 3</li>
-     * </ul>
-     */
-    public static int getPhoneType(Context context) {
-        TelephonyManager tm = (TelephonyManager) context
-                .getSystemService(Context.TELEPHONY_SERVICE);
-        return tm != null ? tm.getPhoneType() : -1;
-    }
-
+    private static final int NETWORK_TYPE_GSM      = 16;
+    private static final int NETWORK_TYPE_TD_SCDMA = 17;
+    private static final int NETWORK_TYPE_IWLAN    = 18;
 
     /**
-     * 获取当前的网络类型(WIFI,2G,3G,4G)
-     * <p>需添加权限 {@code <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE"/>}</p>
+     * 获取当前网络类型
+     * <p>需添加权限
+     * {@code <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />}</p>
      *
-     * @param context 上下文
      * @return 网络类型
      * <ul>
-     * <li>{@link #NETWORK_WIFI   } = 1;</li>
-     * <li>{@link #NETWORK_4G     } = 4;</li>
-     * <li>{@link #NETWORK_3G     } = 3;</li>
-     * <li>{@link #NETWORK_2G     } = 2;</li>
-     * <li>{@link #NETWORK_UNKNOWN} = 5;</li>
-     * <li>{@link #NETWORK_NO     } = -1;</li>
+     * <li>{@link NetworkType#NETWORK_WIFI   } </li>
+     * <li>{@link NetworkType#NETWORK_4G     } </li>
+     * <li>{@link NetworkType#NETWORK_3G     } </li>
+     * <li>{@link NetworkType#NETWORK_2G     } </li>
+     * <li>{@link NetworkType#NETWORK_UNKNOWN} </li>
+     * <li>{@link NetworkType#NETWORK_NO     } </li>
      * </ul>
      */
-    public static int getNetWorkType(Context context) {
-        int netType = NETWORK_NO;
-        NetworkInfo info = getActiveNetworkInfo(context);
+    public static NetworkType getNetworkType() {
+        NetworkType netType = NetworkType.NETWORK_NO;
+        NetworkInfo info = getActiveNetworkInfo();
         if (info != null && info.isAvailable()) {
 
             if (info.getType() == ConnectivityManager.TYPE_WIFI) {
-                netType = NETWORK_WIFI;
+                netType = NetworkType.NETWORK_WIFI;
             } else if (info.getType() == ConnectivityManager.TYPE_MOBILE) {
                 switch (info.getSubtype()) {
 
@@ -169,7 +294,7 @@ public class NetworkUtils {
                     case TelephonyManager.NETWORK_TYPE_EDGE:
                     case TelephonyManager.NETWORK_TYPE_1xRTT:
                     case TelephonyManager.NETWORK_TYPE_IDEN:
-                        netType = NETWORK_2G;
+                        netType = NetworkType.NETWORK_2G;
                         break;
 
                     case NETWORK_TYPE_TD_SCDMA:
@@ -182,12 +307,12 @@ public class NetworkUtils {
                     case TelephonyManager.NETWORK_TYPE_EVDO_B:
                     case TelephonyManager.NETWORK_TYPE_EHRPD:
                     case TelephonyManager.NETWORK_TYPE_HSPAP:
-                        netType = NETWORK_3G;
+                        netType = NetworkType.NETWORK_3G;
                         break;
 
                     case NETWORK_TYPE_IWLAN:
                     case TelephonyManager.NETWORK_TYPE_LTE:
-                        netType = NETWORK_4G;
+                        netType = NetworkType.NETWORK_4G;
                         break;
                     default:
 
@@ -195,48 +320,73 @@ public class NetworkUtils {
                         if (subtypeName.equalsIgnoreCase("TD-SCDMA")
                                 || subtypeName.equalsIgnoreCase("WCDMA")
                                 || subtypeName.equalsIgnoreCase("CDMA2000")) {
-                            netType = NETWORK_3G;
+                            netType = NetworkType.NETWORK_3G;
                         } else {
-                            netType = NETWORK_UNKNOWN;
+                            netType = NetworkType.NETWORK_UNKNOWN;
                         }
                         break;
                 }
             } else {
-                netType = NETWORK_UNKNOWN;
+                netType = NetworkType.NETWORK_UNKNOWN;
             }
         }
         return netType;
     }
 
     /**
-     * 获取当前的网络类型(WIFI,2G,3G,4G)
-     * <p>依赖上面的方法</p>
+     * 获取 IP 地址
+     * <p>需添加权限 {@code <uses-permission android:name="android.permission.INTERNET" />}</p>
      *
-     * @param context 上下文
-     * @return 网络类型名称
-     * <ul>
-     * <li>NETWORK_WIFI   </li>
-     * <li>NETWORK_4G     </li>
-     * <li>NETWORK_3G     </li>
-     * <li>NETWORK_2G     </li>
-     * <li>NETWORK_UNKNOWN</li>
-     * <li>NETWORK_NO     </li>
-     * </ul>
+     * @param useIPv4 是否用 IPv4
+     * @return IP 地址
      */
-    public static String getNetWorkTypeName(Context context) {
-        switch (getNetWorkType(context)) {
-            case NETWORK_WIFI:
-                return "NETWORK_WIFI";
-            case NETWORK_4G:
-                return "NETWORK_4G";
-            case NETWORK_3G:
-                return "NETWORK_3G";
-            case NETWORK_2G:
-                return "NETWORK_2G";
-            case NETWORK_NO:
-                return "NETWORK_NO";
-            default:
-                return "NETWORK_UNKNOWN";
+    public static String getIPAddress(final boolean useIPv4) {
+        try {
+            for (Enumeration<NetworkInterface> nis =
+                 NetworkInterface.getNetworkInterfaces(); nis.hasMoreElements(); ) {
+                NetworkInterface ni = nis.nextElement();
+                // 防止小米手机返回 10.0.2.15
+                if (!ni.isUp()) continue;
+                Enumeration<InetAddress> addresses = ni.getInetAddresses();
+                while (addresses.hasMoreElements()) {
+                    InetAddress inetAddress = addresses.nextElement();
+                    if (!inetAddress.isLoopbackAddress()) {
+                        String hostAddress = inetAddress.getHostAddress();
+                        boolean isIPv4 = hostAddress.indexOf(':') < 0;
+                        if (useIPv4) {
+                            if (isIPv4) return hostAddress;
+                        } else {
+                            if (!isIPv4) {
+                                int index = hostAddress.indexOf('%');
+                                return index < 0
+                                        ? hostAddress.toUpperCase()
+                                        : hostAddress.substring(0, index).toUpperCase();
+                            }
+                        }
+                    }
+                }
+            }
+        } catch (SocketException e) {
+            e.printStackTrace();
+        }
+        return null;
+    }
+
+    /**
+     * 获取域名 ip 地址
+     * <p>需添加权限 {@code <uses-permission android:name="android.permission.INTERNET" />}</p>
+     *
+     * @param domain 域名
+     * @return ip 地址
+     */
+    public static String getDomainAddress(final String domain) {
+        InetAddress inetAddress;
+        try {
+            inetAddress = InetAddress.getByName(domain);
+            return inetAddress.getHostAddress();
+        } catch (UnknownHostException e) {
+            e.printStackTrace();
+            return null;
         }
     }
 }

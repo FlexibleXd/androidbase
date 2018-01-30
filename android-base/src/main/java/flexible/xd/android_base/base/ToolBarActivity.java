@@ -158,7 +158,7 @@ public class ToolBarActivity extends BaseActivity {
             params.gravity = Gravity.CENTER;
             getContainer().addView(noNet, params);
         }
-        if (NetworkUtils.isConnected(this)) {
+        if (NetworkUtils.isConnected()) {
             noNet.setVisibility(View.GONE);
             getContainer().removeView(noNet);
         } else {
@@ -170,7 +170,7 @@ public class ToolBarActivity extends BaseActivity {
             public void onClick(View v) {
                 if (refreshOnClickListener != null)
                     refreshOnClickListener.onClick();
-                if (NetworkUtils.isConnected(XdApp.getAppContext())) {
+                if (NetworkUtils.isConnected()) {
                     noNet.setVisibility(View.GONE);
                     getContainer().removeView(noNet);
                 } else {

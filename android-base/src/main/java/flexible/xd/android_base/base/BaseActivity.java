@@ -25,6 +25,8 @@ import flexible.xd.android_base.network.NoHttpListener;
 import flexible.xd.android_base.network.NoHttpManager;
 import flexible.xd.android_base.utils.ToastUtil;
 
+import static flexible.xd.android_base.utils.ToastUtil.showShort;
+
 
 /**
  * Created by flexible on 2016/12/12.
@@ -125,7 +127,7 @@ public class BaseActivity extends AppCompatActivity implements View.OnClickListe
 
 
     public void toast(String content) {
-        ToastUtil.showToast(XdApp.getAppContext(), content);
+        showShort( content);
     }
 
     public void startActivity(Class<? extends Activity> clazz) {

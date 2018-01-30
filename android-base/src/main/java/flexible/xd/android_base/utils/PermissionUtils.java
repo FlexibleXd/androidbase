@@ -19,11 +19,13 @@ public class PermissionUtils {
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
             if (ContextCompat.checkSelfPermission(act, permission) != PackageManager.PERMISSION_GRANTED) {
                 if (ActivityCompat.shouldShowRequestPermissionRationale(act, permission)) {
-                    ToastUtil.showToastBottom(XdApp.getAppContext(), msg);
+                    ToastUtil.showShort( msg);
                 } else {
                     ActivityCompat.requestPermissions(act, new String[]{permission}, code);
                 }
             }
         }
     }
+
+
 }

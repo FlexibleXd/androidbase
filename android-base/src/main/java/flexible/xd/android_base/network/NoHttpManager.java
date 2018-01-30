@@ -77,8 +77,8 @@ public class NoHttpManager<T> implements OnResponseListener<T> {
 
     @Override
     public void onFailed(int what, Response<T> response) {
-        LogUtils.LOGE("Exception", response.getException().toString());
-        ToastUtil.showToastBottom(XdApp.getAppContext(), XdApp.getAppContext().getString(R.string.request_faile));
+        LogUtils.eTag("Exception", response.getException().toString());
+        ToastUtil.showShort(R.string.request_faile);
         if (null != mListener) {
             mListener.onFailed(what, response);
         }
