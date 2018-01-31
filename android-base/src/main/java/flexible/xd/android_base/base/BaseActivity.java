@@ -39,78 +39,13 @@ public class BaseActivity extends AppCompatActivity implements View.OnClickListe
     public void onCreate(Bundle savedInstanceState) {
         setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_PORTRAIT);
         super.onCreate(savedInstanceState);
-        //修改状态栏颜色
-//        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.KITKAT) {
-//            if (MIUISetStatusBarLightMode(getWindow(), true)) {//判断是不是小米系统
-//                MIUISetStatusBarLightMode(getWindow(), true);
-//            } else if (FlymeSetStatusBarLightMode(getWindow(), true)) {//判断是不是魅族系统
-//                FlymeSetStatusBarLightMode(getWindow(), true);
-//            }
-//        }
     }
+
     /**
-     * 修改小米手机系统的
-     * @param window
-     * @param dark
-     * @return
+     * 全局的loading 可进行其他操作
+     *
+     * @param isLoad
      */
-    public static boolean MIUISetStatusBarLightMode(Window window, boolean dark) {
-        boolean result = false;
-        if (window != null) {
-            Class clazz = window.getClass();
-            try {
-                int darkModeFlag = 0;
-                Class layoutParams = Class.forName("android.view.MiuiWindowManager$LayoutParams");
-                Field field = layoutParams.getField("EXTRA_FLAG_STATUS_BAR_DARK_MODE");
-                darkModeFlag = field.getInt(layoutParams);
-                Method extraFlagField = clazz.getMethod("setExtraFlags", int.class, int.class);
-                if(dark){
-                    extraFlagField.invoke(window,darkModeFlag,darkModeFlag);//状态栏透明且黑色字体
-                }else{
-                    extraFlagField.invoke(window, 0, darkModeFlag);//清除黑色字体
-                }
-                result=true;
-            }catch (Exception e){
-
-            }
-        }
-        return result;
-    }
-    /**
-     * 魅族手机修改该字体颜色
-     * @param window
-     * @param dark
-     * @return
-     */
-    public static boolean FlymeSetStatusBarLightMode(Window window, boolean dark) {
-        boolean result = false;
-        if (window != null) {
-            try {
-                WindowManager.LayoutParams lp = window.getAttributes();
-                Field darkFlag = WindowManager.LayoutParams.class
-                        .getDeclaredField("MEIZU_FLAG_DARK_STATUS_BAR_ICON");
-                Field meizuFlags = WindowManager.LayoutParams.class
-                        .getDeclaredField("meizuFlags");
-                darkFlag.setAccessible(true);
-                meizuFlags.setAccessible(true);
-                int bit = darkFlag.getInt(null);
-                int value = meizuFlags.getInt(lp);
-                if (dark) {
-                    value |= bit;
-                } else {
-                    value &= ~bit;
-                }
-                meizuFlags.setInt(lp, value);
-                window.setAttributes(lp);
-                result = true;
-            } catch (Exception e) {
-
-            }
-        }
-        return result;
-    }
-
-
     public void isLoad(boolean isLoad) {
         if (null == loadProgress) {
             loadProgress = LayoutInflater.from(this).inflate(R.layout.view_load_progress, null);
@@ -127,7 +62,11 @@ public class BaseActivity extends AppCompatActivity implements View.OnClickListe
 
 
     public void toast(String content) {
-        showShort( content);
+        showShort(content);
+    }
+
+    public void toast(int resource) {
+        showShort(resource);
     }
 
     public void startActivity(Class<? extends Activity> clazz) {

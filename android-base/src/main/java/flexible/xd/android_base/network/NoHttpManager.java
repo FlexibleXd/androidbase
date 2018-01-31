@@ -9,7 +9,6 @@ import com.yolanda.nohttp.rest.Response;
 import org.greenrobot.eventbus.EventBus;
 
 import flexible.xd.android_base.R;
-import flexible.xd.android_base.base.XdApp;
 import flexible.xd.android_base.model.event.LoginEvent;
 import flexible.xd.android_base.utils.LogUtils;
 import flexible.xd.android_base.utils.ToastUtil;
@@ -69,6 +68,9 @@ public class NoHttpManager<T> implements OnResponseListener<T> {
             EventBus.getDefault().post(new LoginEvent());
             return;
         }
+        if (response.get() == null) {
+            return;
+        }
         if (null != mListener) {
             mListener.onSucceed(what, response);
         }
@@ -92,34 +94,4 @@ public class NoHttpManager<T> implements OnResponseListener<T> {
                 loadingDialog.dismiss();
         }
     }
-
-//    public static Activity getActivity() {
-//        try {
-//            Class activityThreadClass = Class.forName("android.app.ActivityThread");
-//            Object activityThread = activityThreadClass.getMethod("currentActivityThread").invoke(null);
-//            Field activitiesField = activityThreadClass.getDeclaredField("mActivities");
-//            activitiesField.setAccessible(true);
-//            Map activities = null;
-//            if (Build.VERSION.SDK_INT < Build.VERSION_CODES.KITKAT) { // 4.4 以下使用的是 HashMap
-//                activities = (HashMap) activitiesField.get(activityThread);
-//            } else { // 4.4 以上使用的是 ArrayMap
-//                activities = (ArrayMap) activitiesField.get(activityThread);
-//            }
-//            for (Object activityRecord : activities.values()) {
-//                Class activityRecordClass = activityRecord.getClass();
-//                Field pausedField = activityRecordClass.getDeclaredField("paused"); // 找到 paused 为 false 的activity
-//                pausedField.setAccessible(true);
-//                if (!pausedField.getBoolean(activityRecord)) {
-//                    Field activityField = activityRecordClass.getDeclaredField("activity");
-//                    activityField.setAccessible(true);
-//                    Activity activity = (Activity) activityField.get(activityRecord);
-//                    return activity;
-//                }
-//            }
-//        } catch (Exception e) {
-//            e.printStackTrace();
-//        }
-//        return null;
-//    }
-
 }

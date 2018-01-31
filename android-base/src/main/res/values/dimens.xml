@@ -1,0 +1,8 @@
+<resources>
+
+    <dimen name="flexible_actionbar_size">48dp</dimen>
+    <dimen name="flexible_text_default">14sp</dimen>
+    <dimen name="flexible_text_large">16sp</dimen>
+    <dimen name="flexible_text_medium">12sp</dimen>
+    <dimen name="flexible_text_min">10sp</dimen>
+</resources>

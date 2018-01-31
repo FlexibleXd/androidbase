@@ -8,8 +8,11 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.FrameLayout;
+
 import com.yolanda.nohttp.rest.Request;
+
 import java.io.Serializable;
+
 import flexible.xd.android_base.R;
 import flexible.xd.android_base.network.CallServer;
 import flexible.xd.android_base.network.NoHttpListener;
@@ -67,7 +70,11 @@ public class BaseFragment extends Fragment implements View.OnClickListener {
     }
 
     public void toast(String content) {
-        showShort( content);
+        showShort(content);
+    }
+
+    public void toast(int resource) {
+        showShort(resource);
     }
 
     private Object cancelObject = new Object();

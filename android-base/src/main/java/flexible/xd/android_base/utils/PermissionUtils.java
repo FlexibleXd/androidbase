@@ -7,9 +7,6 @@ import android.support.v4.app.ActivityCompat;
 import android.support.v4.content.ContextCompat;
 
 
-import flexible.xd.android_base.base.XdApp;
-
-
 /**
  * Created by Flexible on 2017/2/6 0006.
  */

@@ -18,8 +18,7 @@ import java.util.List;
 import java.util.Map;
 
 import flexible.xd.android_base.R;
-import flexible.xd.android_base.base.XdApp;
-import flexible.xd.android_base.utils.LogUtils;
+import flexible.xd.android_base.base.BaseApp;
 
 /**
  * Created by Flexible on 2017/10/24 0024.
@@ -50,7 +49,7 @@ public abstract class BaseAdapter<T> extends RecyclerView.Adapter<RecyclerView.V
 
     public BaseAdapter(List<T> data) {
         this.data = data;
-        this.ctx = XdApp.getAppContext();
+        this.ctx = BaseApp.getAppContext();
         init();
     }
 

@@ -33,15 +33,14 @@ public class ToolBarActivity extends BaseActivity {
     private TextView tvRefresh;
     private View noData;
     private TextView tvNoData;
-    public static final String _TITLE = "TOOL_TITLE";
+    public static final String _TITLE = "TOOLBAR_TITLE";
     private ImageView ivNoData;
     private TextView tvNoClick;
+    private Boolean isCheckNet = false;
 
     public void setCheckNet(Boolean checkNet) {
         isCheckNet = checkNet;
     }
-
-    private Boolean isCheckNet = false;
 
     @Override
     public void setContentView(int layoutResID) {
@@ -80,13 +79,13 @@ public class ToolBarActivity extends BaseActivity {
     private NoDataOnClickListener noDataOnClickListener;
 
 
-    public void setNodataOnClickListener(NoDataOnClickListener noDataOnClickListener) {
+    public void setNoDataOnClickListener(NoDataOnClickListener noDataOnClickListener) {
         this.noDataOnClickListener = noDataOnClickListener;
     }
 
 
     /**
-     * 无数据页面
+     * 无数据页面初始化
      *
      * @param isShow    是否显示
      * @param hasClick  是否有按钮点击
@@ -95,7 +94,7 @@ public class ToolBarActivity extends BaseActivity {
      * @param clickText 按钮文字
      */
 
-    public void noData(boolean isShow, boolean hasClick, int imgId, String text, String clickText) {
+    public void noDataInit(boolean isShow, boolean hasClick, int imgId, String text, String clickText) {
         if (noData == null) {
             noData = LayoutInflater.from(this).inflate(R.layout.view_no_data, null);
             tvNoData = ButterKnife.findById(noData, R.id.tv_no_data);
@@ -105,7 +104,7 @@ public class ToolBarActivity extends BaseActivity {
             params.gravity = Gravity.CENTER;
             getContainer().addView(noData, params);
         }
-        GlideUtils.resouce2Iv(XdApp.getAppContext(), imgId, ivNoData);
+        GlideUtils.resouce2Iv(BaseApp.getAppContext(), imgId, ivNoData);
         tvNoData.setText(text);
         if (hasClick) {
             tvNoClick.setText(clickText);
@@ -121,6 +120,41 @@ public class ToolBarActivity extends BaseActivity {
                     noDataOnClickListener.onClick();
             }
         });
+
+        if (isShow) {
+            noData.setVisibility(View.VISIBLE);
+        } else {
+            noData.setVisibility(View.GONE);
+        }
+    }
+
+    public void noDataInit(boolean isShow, boolean hasClick, int imgId, String text, String clickText,NoDataOnClickListener listener) {
+        if (noData == null) {
+            noData = LayoutInflater.from(this).inflate(R.layout.view_no_data, null);
+            tvNoData = ButterKnife.findById(noData, R.id.tv_no_data);
+            ivNoData = ButterKnife.findById(noData, R.id.iv_no);
+            tvNoClick = ButterKnife.findById(noData, R.id.tv_click);
+            LinearLayout.LayoutParams params = new LinearLayout.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT, LinearLayout.LayoutParams.MATCH_PARENT);
+            params.gravity = Gravity.CENTER;
+            getContainer().addView(noData, params);
+        }
+        GlideUtils.resouce2Iv(BaseApp.getAppContext(), imgId, ivNoData);
+        tvNoData.setText(text);
+        if (hasClick) {
+            tvNoClick.setText(clickText);
+            tvNoClick.setVisibility(View.VISIBLE);
+        } else {
+            tvNoClick.setVisibility(View.GONE);
+        }
+
+        setNoDataOnClickListener(listener);
+        tvNoClick.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                if (noDataOnClickListener != null)
+                    noDataOnClickListener.onClick();
+            }
+        });
         if (isShow) {
             noData.setVisibility(View.VISIBLE);
         } else {
@@ -129,11 +163,11 @@ public class ToolBarActivity extends BaseActivity {
     }
 
     /**
-     * 无数据页面
+     * 是否显示无数据页面
      *
      * @param isShow 是否显示
      */
-    public void noData(boolean isShow) {
+    public void noDataShow(boolean isShow) {
         if (noData != null) {
             if (isShow) {
                 noData.setVisibility(View.VISIBLE);
