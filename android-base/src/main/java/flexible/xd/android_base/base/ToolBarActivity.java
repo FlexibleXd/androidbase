@@ -1,5 +1,6 @@
 package flexible.xd.android_base.base;
 
+import android.os.Bundle;
 import android.support.v7.widget.Toolbar;
 import android.view.Gravity;
 import android.view.LayoutInflater;
@@ -16,6 +17,10 @@ import butterknife.ButterKnife;
 import flexible.xd.android_base.R;
 import flexible.xd.android_base.model.listener.NoDataOnClickListener;
 import flexible.xd.android_base.model.listener.RefreshOnClickListener;
+import flexible.xd.android_base.swipeBack.SwipeBackActivityBase;
+import flexible.xd.android_base.swipeBack.SwipeBackActivityHelper;
+import flexible.xd.android_base.swipeBack.SwipeBackLayout;
+import flexible.xd.android_base.swipeBack.Utils;
 import flexible.xd.android_base.utils.GlideUtils;
 import flexible.xd.android_base.utils.NetworkUtils;
 import flexible.xd.android_base.utils.StringUtils;
@@ -25,7 +30,7 @@ import flexible.xd.android_base.utils.StringUtils;
  * Created by flexibleXd on 2016/12/23.
  */
 
-public class ToolBarActivity extends BaseActivity {
+public class ToolBarActivity extends BaseActivity implements SwipeBackActivityBase {
     private Toolbar toolbar;
     private ViewGroup container;
     private ViewGroup frame;
@@ -37,9 +42,14 @@ public class ToolBarActivity extends BaseActivity {
     private ImageView ivNoData;
     private TextView tvNoClick;
     private Boolean isCheckNet = false;
+    private SwipeBackActivityHelper mHelper;
 
-    public void setCheckNet(Boolean checkNet) {
-        isCheckNet = checkNet;
+    @Override
+    public void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        mHelper = new SwipeBackActivityHelper(this);
+        mHelper.onActivityCreate();
+        getSwipeBackLayout().setEdgeTrackingEnabled(SwipeBackLayout.EDGE_LEFT);
     }
 
     @Override
@@ -59,6 +69,10 @@ public class ToolBarActivity extends BaseActivity {
         }
         noNet();
         super.setContentView(_iView);
+    }
+
+    public void setCheckNet(Boolean checkNet) {
+        isCheckNet = checkNet;
     }
 
 
@@ -128,7 +142,7 @@ public class ToolBarActivity extends BaseActivity {
         }
     }
 
-    public void noDataInit(boolean isShow, boolean hasClick, int imgId, String text, String clickText,NoDataOnClickListener listener) {
+    public void noDataInit(boolean isShow, boolean hasClick, int imgId, String text, String clickText, NoDataOnClickListener listener) {
         if (noData == null) {
             noData = LayoutInflater.from(this).inflate(R.layout.view_no_data, null);
             tvNoData = ButterKnife.findById(noData, R.id.tv_no_data);
@@ -244,5 +258,27 @@ public class ToolBarActivity extends BaseActivity {
                 return true;
         }
         return super.onOptionsItemSelected(item);
+    }
+
+    @Override
+    protected void onPostCreate(Bundle savedInstanceState) {
+        super.onPostCreate(savedInstanceState);
+        mHelper.onPostCreate();
+    }
+
+    @Override
+    public SwipeBackLayout getSwipeBackLayout() {
+        return mHelper.getSwipeBackLayout();
+    }
+
+    @Override
+    public void setSwipeBackEnable(boolean enable) {
+        getSwipeBackLayout().setEnableGesture(enable);
+    }
+
+    @Override
+    public void scrollToFinishActivity() {
+        Utils.convertActivityToTranslucent(this);
+        getSwipeBackLayout().scrollToFinishActivity();
     }
 }
