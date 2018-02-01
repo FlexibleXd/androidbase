@@ -6,8 +6,11 @@ import android.net.Uri;
 import android.widget.ImageView;
 
 import com.bumptech.glide.Glide;
+import com.bumptech.glide.load.engine.DiskCacheStrategy;
+import com.bumptech.glide.load.resource.drawable.DrawableTransitionOptions;
 
 import java.io.ByteArrayOutputStream;
+import flexible.xd.android_base.GlideApp;
 
 
 /**
@@ -17,6 +20,16 @@ import java.io.ByteArrayOutputStream;
  */
 
 public class GlideUtils {
+
+//      .diskCacheStrategy(DiskCacheStrategy.ALL)
+//
+//
+//        Glide.with(fragment)
+//            .load(url)
+//  .transition(
+//      new DrawableTransitionOptions
+//            .crossFade())
+//            .into(imageView);
     /**
      * 普通加载 无默认 int
      *
@@ -25,7 +38,7 @@ public class GlideUtils {
      * @param imageView
      */
     public static void resouce2Iv(Context ctx, int resouceId, ImageView imageView) {
-        Glide.with(ctx).load(resouceId).centerCrop().into(imageView);
+        GlideApp.with(ctx).load(resouceId).into(imageView);
     }
 
     /**
@@ -36,7 +49,7 @@ public class GlideUtils {
      * @param imageView
      */
     public static void url2Iv(Context ctx, String imageUrl,ImageView imageView) {
-        Glide.with(ctx).load(imageUrl).centerCrop().into(imageView);
+        GlideApp.with(ctx).load(imageUrl).into(imageView);
     }
 
 
@@ -48,7 +61,7 @@ public class GlideUtils {
      * @param imageView
      */
     public static void default2Iv(Context ctx, String imageUrl, int defaultImg, ImageView imageView) {
-        Glide.with(ctx).load(imageUrl).centerCrop().placeholder(defaultImg).into(imageView);
+        GlideApp.with(ctx).load(imageUrl).placeholder(defaultImg).into(imageView);
     }
     /**
      * uri
@@ -58,7 +71,7 @@ public class GlideUtils {
      * @param imageView
      */
     public static void uri2Iv(Context ctx, Uri imageUri, ImageView imageView) {
-        Glide.with(ctx).load(imageUri).centerCrop().into(imageView);
+        GlideApp.with(ctx).load(imageUri).centerCrop().into(imageView);
     }
 
 //
@@ -67,6 +80,6 @@ public class GlideUtils {
         ByteArrayOutputStream baos = new ByteArrayOutputStream();
         imageUri.compress(Bitmap.CompressFormat.JPEG, 100, baos);
         byte[] bytes = baos.toByteArray();
-        Glide.with(ctx).load(bytes).centerCrop().into(imageView);
+        GlideApp.with(ctx).load(bytes).centerCrop().into(imageView);
     }
 }

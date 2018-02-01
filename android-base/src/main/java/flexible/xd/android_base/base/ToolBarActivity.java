@@ -14,6 +14,7 @@ import android.widget.TextView;
 
 
 import butterknife.ButterKnife;
+import flexible.xd.android_base.GlideApp;
 import flexible.xd.android_base.R;
 import flexible.xd.android_base.model.listener.NoDataOnClickListener;
 import flexible.xd.android_base.model.listener.RefreshOnClickListener;
@@ -118,7 +119,7 @@ public class ToolBarActivity extends BaseActivity implements SwipeBackActivityBa
             params.gravity = Gravity.CENTER;
             getContainer().addView(noData, params);
         }
-        GlideUtils.resouce2Iv(BaseApp.getAppContext(), imgId, ivNoData);
+        GlideApp.with(BaseApp.getAppContext()).load(imgId).into(ivNoData);
         tvNoData.setText(text);
         if (hasClick) {
             tvNoClick.setText(clickText);
@@ -152,7 +153,7 @@ public class ToolBarActivity extends BaseActivity implements SwipeBackActivityBa
             params.gravity = Gravity.CENTER;
             getContainer().addView(noData, params);
         }
-        GlideUtils.resouce2Iv(BaseApp.getAppContext(), imgId, ivNoData);
+        GlideApp.with(BaseApp.getAppContext()).load(imgId).into(ivNoData);
         tvNoData.setText(text);
         if (hasClick) {
             tvNoClick.setText(clickText);
