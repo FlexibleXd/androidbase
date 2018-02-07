@@ -21,13 +21,12 @@ android {
             proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
         }
     }
-
 }
 
 dependencies {
     implementation fileTree(include: ['*.jar'], dir: 'libs')
     compile 'com.alibaba:fastjson:1.1.56.android'
-    implementation ("com.github.bumptech.glide:glide:4.5.0") {
+    implementation("com.github.bumptech.glide:glide:4.5.0") {
         exclude group: "com.android.support"
     }
     annotationProcessor 'com.github.bumptech.glide:compiler:4.5.0'

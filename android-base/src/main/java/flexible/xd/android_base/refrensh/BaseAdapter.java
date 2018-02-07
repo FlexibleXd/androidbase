@@ -20,6 +20,7 @@ import java.util.Map;
 import flexible.xd.android_base.R;
 import flexible.xd.android_base.base.BaseApp;
 
+
 /**
  * Created by Flexible on 2017/10/24 0024.
  */
@@ -68,6 +69,9 @@ public abstract class BaseAdapter<T> extends RecyclerView.Adapter<RecyclerView.V
             if (isLoading) {
                 return onLoadMoreHolder(parent);
             }
+            if (!hasMore) {
+                return onLoadMoreHolder(parent);
+            }
             viewHolder = onCreateFootVHolder(parent, viewType);
         } else {
             viewHolder = onCreateVHolder(parent, viewType);
@@ -95,6 +99,12 @@ public abstract class BaseAdapter<T> extends RecyclerView.Adapter<RecyclerView.V
                 LoadMoreVHolder loadMoreVHolder = (LoadMoreVHolder) holder;
                 loadMoreVHolder.setHasMore(true);
                 return;
+            } else {
+                if (!hasMore) {
+                    LoadMoreVHolder loadMoreVHolder = (LoadMoreVHolder) holder;
+                    loadMoreVHolder.setHasMore(false);
+                    return;
+                }
             }
             onBindFootVHolder(holder, position);
         } else {
@@ -179,13 +189,15 @@ public abstract class BaseAdapter<T> extends RecyclerView.Adapter<RecyclerView.V
     }
 
 
-    public boolean hasFootView() {
+    private boolean hasFootView() {
         if (isLoading)
+            return true;
+        if (!hasMore)
             return true;
         return false;
     }
 
-    public void init() {
+    private void init() {
         holderType.clear();
         if (data.size() == 0) {
             holderType.add(CT_EMPTY);
@@ -202,11 +214,30 @@ public abstract class BaseAdapter<T> extends RecyclerView.Adapter<RecyclerView.V
     private boolean isAutoLoad = false;
     private boolean isLoadEnable = false;
     private boolean isLoading = false;
+    private boolean hasMore = true;
 
+    /**
+     * 是否正在加载
+     *
+     * @param loading
+     */
     public void setLoading(boolean loading) {
         isLoading = loading;
         init();
     }
+
+    /**
+     * 加载完成
+     *
+     * @param isHasMore
+     */
+    public void loadMoreComplete(boolean isHasMore) {
+        isLoading = false;
+        hasMore = isHasMore;
+        init();
+        notifyData();
+    }
+
 
     public void setLoadEnable(boolean loadEnable) {
         isLoadEnable = loadEnable;
@@ -264,7 +295,7 @@ public abstract class BaseAdapter<T> extends RecyclerView.Adapter<RecyclerView.V
     }
 
     private void scrollLoadMore() {
-        if (!isLoading) {
+        if (!isLoading && hasMore) {
             isLoading = true;
             notifyData();
             loadMore();
@@ -340,7 +371,9 @@ public abstract class BaseAdapter<T> extends RecyclerView.Adapter<RecyclerView.V
         return holderType.get(pos) == CT_EMPTY;
     }
 
-
+    /**
+     * 刷新数据
+     */
     public void notifyData() {
         init();
         notifyDataSetChanged();
