@@ -39,7 +39,7 @@ public class ToolBarActivity extends BaseActivity implements SwipeBackActivityBa
     private TextView tvRefresh;
     private View noData;
     private TextView tvNoData;
-    public static final String _TITLE = "TOOLBAR_TITLE";
+    public static final String _TITLE = "TB_TITLE";
     private ImageView ivNoData;
     private TextView tvNoClick;
     private Boolean isCheckNet = false;
@@ -100,16 +100,36 @@ public class ToolBarActivity extends BaseActivity implements SwipeBackActivityBa
 
 
     /**
-     * 无数据页面初始化
+     * 无数据页面初始化 无按钮
      *
-     * @param isShow    是否显示
-     * @param hasClick  是否有按钮点击
+     * @param imgId 图片资源id
+     * @param text  提示语言
+     */
+
+    public void noDataShow(int imgId, String text) {
+        if (noData == null) {
+            noData = LayoutInflater.from(this).inflate(R.layout.view_no_data, null);
+            tvNoData = ButterKnife.findById(noData, R.id.tv_no_data);
+            ivNoData = ButterKnife.findById(noData, R.id.iv_no);
+            tvNoClick = ButterKnife.findById(noData, R.id.tv_click);
+            LinearLayout.LayoutParams params = new LinearLayout.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT, LinearLayout.LayoutParams.MATCH_PARENT);
+            params.gravity = Gravity.CENTER;
+            getContainer().addView(noData, params);
+        }
+        GlideApp.with(BaseApp.getAppContext()).load(imgId).into(ivNoData);
+        tvNoData.setText(text);
+        tvNoClick.setVisibility(View.GONE);
+        noData.setVisibility(View.VISIBLE);
+    }
+
+    /**
+     * 无数据页面初始化 有点击按钮
+     *
      * @param imgId     图片资源id
      * @param text      提示语言
      * @param clickText 按钮文字
      */
-
-    public void noDataInit(boolean isShow, boolean hasClick, int imgId, String text, String clickText) {
+    public void noDataShow(int imgId, String text, String clickText, NoDataOnClickListener listener) {
         if (noData == null) {
             noData = LayoutInflater.from(this).inflate(R.layout.view_no_data, null);
             tvNoData = ButterKnife.findById(noData, R.id.tv_no_data);
@@ -121,47 +141,8 @@ public class ToolBarActivity extends BaseActivity implements SwipeBackActivityBa
         }
         GlideApp.with(BaseApp.getAppContext()).load(imgId).into(ivNoData);
         tvNoData.setText(text);
-        if (hasClick) {
-            tvNoClick.setText(clickText);
-            tvNoClick.setVisibility(View.VISIBLE);
-        } else {
-            tvNoClick.setVisibility(View.GONE);
-        }
-
-        tvNoClick.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                if (noDataOnClickListener != null)
-                    noDataOnClickListener.onClick();
-            }
-        });
-
-        if (isShow) {
-            noData.setVisibility(View.VISIBLE);
-        } else {
-            noData.setVisibility(View.GONE);
-        }
-    }
-
-    public void noDataInit(boolean isShow, boolean hasClick, int imgId, String text, String clickText, NoDataOnClickListener listener) {
-        if (noData == null) {
-            noData = LayoutInflater.from(this).inflate(R.layout.view_no_data, null);
-            tvNoData = ButterKnife.findById(noData, R.id.tv_no_data);
-            ivNoData = ButterKnife.findById(noData, R.id.iv_no);
-            tvNoClick = ButterKnife.findById(noData, R.id.tv_click);
-            LinearLayout.LayoutParams params = new LinearLayout.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT, LinearLayout.LayoutParams.MATCH_PARENT);
-            params.gravity = Gravity.CENTER;
-            getContainer().addView(noData, params);
-        }
-        GlideApp.with(BaseApp.getAppContext()).load(imgId).into(ivNoData);
-        tvNoData.setText(text);
-        if (hasClick) {
-            tvNoClick.setText(clickText);
-            tvNoClick.setVisibility(View.VISIBLE);
-        } else {
-            tvNoClick.setVisibility(View.GONE);
-        }
-
+        tvNoClick.setText(clickText);
+        tvNoClick.setVisibility(View.VISIBLE);
         setNoDataOnClickListener(listener);
         tvNoClick.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -170,31 +151,20 @@ public class ToolBarActivity extends BaseActivity implements SwipeBackActivityBa
                     noDataOnClickListener.onClick();
             }
         });
-        if (isShow) {
-            noData.setVisibility(View.VISIBLE);
-        } else {
+        noData.setVisibility(View.VISIBLE);
+    }
+
+    /**
+     * 隐藏无数据页面
+     */
+    public void noDataHide() {
+        if (noData != null) {
             noData.setVisibility(View.GONE);
         }
     }
 
     /**
-     * 是否显示无数据页面
-     *
-     * @param isShow 是否显示
-     */
-    public void noDataShow(boolean isShow) {
-        if (noData != null) {
-            if (isShow) {
-                noData.setVisibility(View.VISIBLE);
-            } else {
-                noData.setVisibility(View.GONE);
-            }
-        }
-
-    }
-
-    /**
-     * 无网络
+     * 无网络 初始化
      */
     public void noNet() {
         if (!isCheckNet) {
@@ -212,18 +182,14 @@ public class ToolBarActivity extends BaseActivity implements SwipeBackActivityBa
             getContainer().removeView(noNet);
         } else {
             noNet.setVisibility(View.VISIBLE);
-
         }
         tvRefresh.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                if (refreshOnClickListener != null)
+                if (refreshOnClickListener != null) {
                     refreshOnClickListener.onClick();
-                if (NetworkUtils.isConnected()) {
                     noNet.setVisibility(View.GONE);
                     getContainer().removeView(noNet);
-                } else {
-                    noNet.setVisibility(View.VISIBLE);
                 }
             }
         });
