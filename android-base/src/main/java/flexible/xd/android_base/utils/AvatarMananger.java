@@ -41,8 +41,8 @@ public class AvatarMananger {
 
     private AvatarMananger() {
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M &&
-                PackageManager.PERMISSION_DENIED  == ContextCompat.checkSelfPermission(act, Manifest.permission.READ_EXTERNAL_STORAGE)) {
-            showShort( "请手动开启sd卡权限");
+                PackageManager.PERMISSION_DENIED == ContextCompat.checkSelfPermission(act, Manifest.permission.READ_EXTERNAL_STORAGE)) {
+            showShort("请手动开启sd卡权限");
             return;
         }
         deleterFile();
@@ -50,9 +50,8 @@ public class AvatarMananger {
     }
 
     private AvatarMananger(String appId) {
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M &&
-                PackageManager.PERMISSION_DENIED  == ContextCompat.checkSelfPermission(act, Manifest.permission.READ_EXTERNAL_STORAGE)) {
-            showShort( "请手动开启sd卡权限");
+        if (!PermissionUtils.isGranted(Manifest.permission.READ_EXTERNAL_STORAGE)) {
+            showShort("请手动开启sd卡权限");
             return;
         }
         this.appId = appId;
@@ -123,9 +122,8 @@ public class AvatarMananger {
      * 打开图库
      */
     public void openAlbum() {
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M &&
-                PackageManager.PERMISSION_DENIED  == ContextCompat.checkSelfPermission(act, Manifest.permission.READ_EXTERNAL_STORAGE)) {
-            showShort( "请手动开启sd卡权限");
+        if (!PermissionUtils.isGranted(Manifest.permission.READ_EXTERNAL_STORAGE)) {
+            showShort("请手动开启sd卡权限");
             return;
         }
         Intent intent = new Intent(Intent.ACTION_PICK,
@@ -137,9 +135,8 @@ public class AvatarMananger {
      * 打开图库
      */
     public void openAlbum(int id) {
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M &&
-                PackageManager.PERMISSION_DENIED  == ContextCompat.checkSelfPermission(act, Manifest.permission.READ_EXTERNAL_STORAGE)) {
-            showShort( "请手动开启sd卡权限");
+        if (!PermissionUtils.isGranted(Manifest.permission.READ_EXTERNAL_STORAGE)) {
+            showShort("请手动开启sd卡权限");
             return;
         }
         Intent intent = new Intent(Intent.ACTION_PICK,
@@ -151,15 +148,12 @@ public class AvatarMananger {
      * 拍照
      */
     public void takePic() {
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M &&
-                PackageManager.PERMISSION_DENIED  == ContextCompat.checkSelfPermission(act, android.Manifest.permission.CAMERA)) {
-
-            showShort( "请手动开启拍照片权限");
+        if (!PermissionUtils.isGranted(Manifest.permission.CAMERA)) {
+            showShort("请手动开启拍照片权限");
             return;
         }
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M &&
-                PackageManager.PERMISSION_DENIED  == ContextCompat.checkSelfPermission(act, Manifest.permission.READ_EXTERNAL_STORAGE)) {
-            showShort( "请手动开启拍照片权限");
+        if (!PermissionUtils.isGranted(Manifest.permission.CAMERA)) {
+            showShort("请手动开启拍照片权限");
             return;
         }
         Intent intent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
@@ -176,14 +170,12 @@ public class AvatarMananger {
      * 拍照
      */
     public void takePic(int id) {
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M &&
-                PackageManager.PERMISSION_DENIED  == ContextCompat.checkSelfPermission(act, android.Manifest.permission.CAMERA)) {
-            showShort( "请手动开启拍照片权限");
+        if (!PermissionUtils.isGranted(Manifest.permission.CAMERA)) {
+            showShort("请手动开启拍照片权限");
             return;
         }
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M &&
-                PackageManager.PERMISSION_DENIED  == ContextCompat.checkSelfPermission(act, Manifest.permission.READ_EXTERNAL_STORAGE)) {
-            showShort( "请手动开启sd卡权限");
+        if (!PermissionUtils.isGranted(Manifest.permission.CAMERA)) {
+            showShort("请手动开启sd卡权限");
             return;
         }
         Intent intent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
