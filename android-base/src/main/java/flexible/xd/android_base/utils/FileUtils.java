@@ -1,7 +1,6 @@
 package flexible.xd.android_base.utils;
 
 import android.annotation.SuppressLint;
-
 import java.io.BufferedInputStream;
 import java.io.File;
 import java.io.FileFilter;

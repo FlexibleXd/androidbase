@@ -9,21 +9,17 @@ import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.view.Window;
-import android.view.WindowManager;
 import android.widget.FrameLayout;
 
-import com.yolanda.nohttp.rest.Request;
+
+import com.yanzhenjie.nohttp.rest.Request;
 
 import java.io.Serializable;
-import java.lang.reflect.Field;
-import java.lang.reflect.Method;
 
 import flexible.xd.android_base.R;
 import flexible.xd.android_base.network.CallServer;
 import flexible.xd.android_base.network.NoHttpListener;
 import flexible.xd.android_base.network.NoHttpManager;
-import flexible.xd.android_base.utils.ToastUtil;
 
 import static flexible.xd.android_base.utils.ToastUtil.showShort;
 

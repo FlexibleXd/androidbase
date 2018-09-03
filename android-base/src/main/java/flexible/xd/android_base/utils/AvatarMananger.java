@@ -152,8 +152,8 @@ public class AvatarMananger {
             showShort("请手动开启拍照片权限");
             return;
         }
-        if (!PermissionUtils.isGranted(Manifest.permission.CAMERA)) {
-            showShort("请手动开启拍照片权限");
+        if (!PermissionUtils.isGranted(Manifest.permission.READ_EXTERNAL_STORAGE)) {
+            showShort("请手动开启sd卡权限");
             return;
         }
         Intent intent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
@@ -174,7 +174,7 @@ public class AvatarMananger {
             showShort("请手动开启拍照片权限");
             return;
         }
-        if (!PermissionUtils.isGranted(Manifest.permission.CAMERA)) {
+        if (!PermissionUtils.isGranted(Manifest.permission.READ_EXTERNAL_STORAGE)) {
             showShort("请手动开启sd卡权限");
             return;
         }

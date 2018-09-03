@@ -3,7 +3,6 @@ package flexible.xd.android_base.utils;
 import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.app.ActivityManager;
-import android.content.ComponentName;
 import android.content.Context;
 import android.content.Intent;
 import android.content.pm.ApplicationInfo;
@@ -12,9 +11,6 @@ import android.content.pm.PackageManager;
 import android.content.pm.ResolveInfo;
 import android.content.pm.Signature;
 import android.graphics.drawable.Drawable;
-import android.net.ConnectivityManager;
-import android.net.NetworkInfo;
-import android.net.Uri;
 import android.os.CountDownTimer;
 import android.util.Log;
 import android.view.View;
@@ -30,12 +26,9 @@ import android.widget.ListView;
 import android.widget.ProgressBar;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
-
 import java.io.File;
 import java.util.ArrayList;
 import java.util.List;
-
-
 
 
 /**
@@ -47,10 +40,6 @@ import java.util.List;
  * </pre>
  */
 public class AppUtil {
-
-
-
-
         /**
          * 判断 App 是否安装
          *

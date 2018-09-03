@@ -9,16 +9,13 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.FrameLayout;
 
-import com.yolanda.nohttp.rest.Request;
+import com.yanzhenjie.nohttp.rest.Request;
 
 import java.io.Serializable;
-
 import flexible.xd.android_base.R;
 import flexible.xd.android_base.network.CallServer;
 import flexible.xd.android_base.network.NoHttpListener;
 import flexible.xd.android_base.network.NoHttpManager;
-import flexible.xd.android_base.utils.ToastUtil;
-
 import static flexible.xd.android_base.utils.ToastUtil.showShort;
 
 /**

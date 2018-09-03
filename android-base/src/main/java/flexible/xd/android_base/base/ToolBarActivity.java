@@ -11,8 +11,6 @@ import android.widget.FrameLayout;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
-
-
 import butterknife.ButterKnife;
 import flexible.xd.android_base.GlideApp;
 import flexible.xd.android_base.R;
@@ -22,7 +20,6 @@ import flexible.xd.android_base.swipeBack.SwipeBackActivityBase;
 import flexible.xd.android_base.swipeBack.SwipeBackActivityHelper;
 import flexible.xd.android_base.swipeBack.SwipeBackLayout;
 import flexible.xd.android_base.swipeBack.Utils;
-import flexible.xd.android_base.utils.GlideUtils;
 import flexible.xd.android_base.utils.NetworkUtils;
 import flexible.xd.android_base.utils.StringUtils;
 

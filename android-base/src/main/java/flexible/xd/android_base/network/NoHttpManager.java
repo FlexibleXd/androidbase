@@ -2,12 +2,11 @@ package flexible.xd.android_base.network;
 
 import android.content.Context;
 
-import com.yolanda.nohttp.rest.OnResponseListener;
-import com.yolanda.nohttp.rest.Request;
-import com.yolanda.nohttp.rest.Response;
+import com.yanzhenjie.nohttp.rest.OnResponseListener;
+import com.yanzhenjie.nohttp.rest.Request;
+import com.yanzhenjie.nohttp.rest.Response;
 
 import org.greenrobot.eventbus.EventBus;
-
 import flexible.xd.android_base.R;
 import flexible.xd.android_base.model.event.LoginEvent;
 import flexible.xd.android_base.utils.LogUtils;

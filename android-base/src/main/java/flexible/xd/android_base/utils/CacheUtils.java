@@ -11,10 +11,8 @@ import android.os.Parcelable;
 import android.os.Process;
 import android.support.annotation.NonNull;
 import android.support.v4.util.SimpleArrayMap;
-
 import org.json.JSONArray;
 import org.json.JSONObject;
-
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
 import java.io.File;

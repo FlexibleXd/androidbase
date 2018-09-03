@@ -1,7 +1,6 @@
 package flexible.xd.android_base.utils;
 
 import com.alibaba.fastjson.JSON;
-
 import java.util.ArrayList;
 
 /**
