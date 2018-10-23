@@ -1,7 +1,6 @@
 package flexible.xd.android_base.utils;
 
 import android.os.Environment;
-
 import java.io.File;
 
 /**

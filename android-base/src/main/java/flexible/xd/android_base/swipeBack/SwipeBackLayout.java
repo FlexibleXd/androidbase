@@ -12,11 +12,8 @@ import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.FrameLayout;
-
-
 import java.util.ArrayList;
 import java.util.List;
-
 import flexible.xd.android_base.R;
 
 

@@ -1,7 +1,6 @@
 package flexible.xd.android_base.utils;
 
 import android.util.Base64;
-
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.IOException;
@@ -10,7 +9,6 @@ import java.security.InvalidKeyException;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
 import java.security.spec.AlgorithmParameterSpec;
-
 import javax.crypto.Cipher;
 import javax.crypto.Mac;
 import javax.crypto.spec.IvParameterSpec;

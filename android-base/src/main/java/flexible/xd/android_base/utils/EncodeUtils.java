@@ -3,7 +3,6 @@ package flexible.xd.android_base.utils;
 import android.os.Build;
 import android.text.Html;
 import android.util.Base64;
-
 import java.io.UnsupportedEncodingException;
 import java.net.URLDecoder;
 import java.net.URLEncoder;

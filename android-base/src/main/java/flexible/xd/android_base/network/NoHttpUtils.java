@@ -2,7 +2,6 @@ package flexible.xd.android_base.network;
 
 import android.graphics.Bitmap;
 
-
 import com.yanzhenjie.nohttp.BitmapBinary;
 import com.yanzhenjie.nohttp.FileBinary;
 import com.yanzhenjie.nohttp.NoHttp;
@@ -11,7 +10,6 @@ import com.yanzhenjie.nohttp.rest.Request;
 import com.yanzhenjie.nohttp.rest.Response;
 
 import org.json.JSONObject;
-
 import java.io.File;
 import java.util.Map;
 

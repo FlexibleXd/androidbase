@@ -24,9 +24,12 @@ android {
 }
 
 dependencies {
+
     implementation fileTree(include: ['*.jar'], dir: 'libs')
     implementation 'com.alibaba:fastjson:1.1.56.android'
     implementation("com.github.bumptech.glide:glide:4.5.0") {
+    implementation 'com.alibaba:fastjson:1.1.56.android'
+    implementation('com.github.bumptech.glide:glide:4.8.0') {
         exclude group: "com.android.support"
     }
     annotationProcessor 'com.github.bumptech.glide:compiler:4.5.0'
@@ -35,10 +38,19 @@ dependencies {
     implementation 'com.jakewharton:butterknife:8.8.1'
     implementation 'com.android.support:recyclerview-v7:27.1.1'
     implementation 'com.android.support:design:27.1.1'
+    annotationProcessor 'com.github.bumptech.glide:compiler:4.8.0'
+    implementation 'org.greenrobot:eventbus:3.1.1'
+    implementation 'com.yanzhenjie.nohttp:nohttp:1.1.11'
+    implementation('com.jakewharton:butterknife:8.8.1') {
+        exclude group: "com.android.support"
+    }
+    implementation 'com.android.support:recyclerview-v7:27.1.1'
+    implementation 'com.android.support:design:27.1.1'
+
 }
 
 // 项目引用的版本号
-version = "1.0.14"
+version = "1.0.16"
 
 // 定义两个链接，下面会用到。
 def siteUrl = 'https://github.com/FlexibleXd/androidbase' // 项目主页。

@@ -5,6 +5,7 @@ package flexible.xd.android_base.refrensh;
  */
 
 public interface AdapterItemListener {
+
     void onItemClick(int position);
 
     boolean onItemLongClick(int position);

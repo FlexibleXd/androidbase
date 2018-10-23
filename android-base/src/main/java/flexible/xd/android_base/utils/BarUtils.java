@@ -1,25 +1,24 @@
 package flexible.xd.android_base.utils;
 
-        import android.annotation.SuppressLint;
-        import android.annotation.TargetApi;
-        import android.app.Activity;
-        import android.content.Context;
-        import android.content.res.Resources;
-        import android.graphics.Color;
-        import android.os.Build;
-        import android.support.annotation.ColorInt;
-        import android.support.annotation.IntRange;
-        import android.support.annotation.NonNull;
-        import android.support.v4.widget.DrawerLayout;
-        import android.util.TypedValue;
-        import android.view.View;
-        import android.view.ViewGroup;
-        import android.view.ViewGroup.MarginLayoutParams;
-        import android.view.Window;
-        import android.view.WindowManager;
-        import android.widget.LinearLayout;
-
-        import java.lang.reflect.Method;
+import android.annotation.SuppressLint;
+import android.annotation.TargetApi;
+import android.app.Activity;
+import android.content.Context;
+import android.content.res.Resources;
+import android.graphics.Color;
+import android.os.Build;
+import android.support.annotation.ColorInt;
+import android.support.annotation.IntRange;
+import android.support.annotation.NonNull;
+import android.support.v4.widget.DrawerLayout;
+import android.util.TypedValue;
+import android.view.View;
+import android.view.ViewGroup;
+import android.view.ViewGroup.MarginLayoutParams;
+import android.view.Window;
+import android.view.WindowManager;
+import android.widget.LinearLayout;
+import java.lang.reflect.Method;
 
 /**
  * <pre>
@@ -35,10 +34,10 @@ public final class BarUtils {
     // status bar
     ///////////////////////////////////////////////////////////////////////////
 
-    private static final int    DEFAULT_ALPHA = 112;
-    private static final String TAG_COLOR     = "TAG_COLOR";
-    private static final String TAG_ALPHA     = "TAG_ALPHA";
-    private static final int    TAG_OFFSET    = -123;
+    private static final int DEFAULT_ALPHA = 112;
+    private static final String TAG_COLOR = "TAG_COLOR";
+    private static final String TAG_ALPHA = "TAG_ALPHA";
+    private static final int TAG_OFFSET = -123;
 
     private BarUtils() {
         throw new UnsupportedOperationException("u can't instantiate me...");
