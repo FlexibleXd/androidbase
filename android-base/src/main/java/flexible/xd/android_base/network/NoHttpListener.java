@@ -1,6 +1,7 @@
 package flexible.xd.android_base.network;
 
-import com.yolanda.nohttp.rest.Response;
+
+import com.yanzhenjie.nohttp.rest.Response;
 
 /**
  * Created by Flexible on 2017/2/7 0007.

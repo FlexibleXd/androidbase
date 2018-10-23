@@ -2,12 +2,13 @@ package flexible.xd.android_base.network;
 
 import android.graphics.Bitmap;
 
-import com.yolanda.nohttp.BitmapBinary;
-import com.yolanda.nohttp.FileBinary;
-import com.yolanda.nohttp.NoHttp;
-import com.yolanda.nohttp.RequestMethod;
-import com.yolanda.nohttp.rest.Request;
-import com.yolanda.nohttp.rest.Response;
+
+import com.yanzhenjie.nohttp.BitmapBinary;
+import com.yanzhenjie.nohttp.FileBinary;
+import com.yanzhenjie.nohttp.NoHttp;
+import com.yanzhenjie.nohttp.RequestMethod;
+import com.yanzhenjie.nohttp.rest.Request;
+import com.yanzhenjie.nohttp.rest.Response;
 
 import org.json.JSONObject;
 
@@ -47,7 +48,7 @@ public class NoHttpUtils {
     }
 
 
-    public static Request<JSONObject> jsonObjectRequest(String url, RequestMethod method, Map<String, String> param) {
+    public static Request<JSONObject> jsonObjectRequest(String url, RequestMethod method, Map<String, Object> param) {
         Request<JSONObject> request = NoHttp.createJsonObjectRequest(url, method);
         if (param != null) {
             request.add(param);
@@ -68,11 +69,11 @@ public class NoHttpUtils {
         return fastJsonObjectRequest(url, method, null);
     }
 
-    public static FastJsonRequest fastJsonObjectRequest(String url, Map<String, String> param) {
+    public static FastJsonRequest fastJsonObjectRequest(String url, Map<String, Object> param) {
         return fastJsonObjectRequest(url, RequestMethod.GET, param);
     }
 
-    public static FastJsonRequest fastJsonObjectRequest(String url, RequestMethod method, Map<String, String> param) {
+    public static FastJsonRequest fastJsonObjectRequest(String url, RequestMethod method, Map<String, Object> param) {
         FastJsonRequest request = new FastJsonRequest(url, method);
         if (param != null) {
             request.add(param);
@@ -87,7 +88,7 @@ public class NoHttpUtils {
      * @param param
      * @return
      */
-    public static Response<com.alibaba.fastjson.JSONObject> fastJosnAsyn(String url, Map<String, String> param) {
+    public static Response<com.alibaba.fastjson.JSONObject> fastJosnAsyn(String url, Map<String, Object> param) {
         // 创建请求。
         FastJsonRequest request = new FastJsonRequest(url, RequestMethod.GET);
         if (param != null) {
@@ -111,7 +112,7 @@ public class NoHttpUtils {
         return beanRequest(url, clazz, method, null);
     }
 
-    public static <T> JavaBeanRequest<T> beanRequest(String url, Class<T> clazz, RequestMethod method, Map<String, String> param) {
+    public static <T> JavaBeanRequest<T> beanRequest(String url, Class<T> clazz, RequestMethod method, Map<String, Object> param) {
         JavaBeanRequest<T> request = new JavaBeanRequest(url, method, clazz);
         if (param != null) {
             request.add(param);

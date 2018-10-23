@@ -1,9 +1,10 @@
 package flexible.xd.android_base.network;
 
-import com.yolanda.nohttp.NoHttp;
-import com.yolanda.nohttp.rest.OnResponseListener;
-import com.yolanda.nohttp.rest.Request;
-import com.yolanda.nohttp.rest.RequestQueue;
+
+import com.yanzhenjie.nohttp.NoHttp;
+import com.yanzhenjie.nohttp.rest.OnResponseListener;
+import com.yanzhenjie.nohttp.rest.Request;
+import com.yanzhenjie.nohttp.rest.RequestQueue;
 
 /**
  * Created by flexibleXd on 2016/12/22.

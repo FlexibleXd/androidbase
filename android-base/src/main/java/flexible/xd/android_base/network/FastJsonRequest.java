@@ -2,10 +2,10 @@ package flexible.xd.android_base.network;
 
 import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONObject;
-import com.yolanda.nohttp.Headers;
-import com.yolanda.nohttp.RequestMethod;
-import com.yolanda.nohttp.rest.RestRequest;
-import com.yolanda.nohttp.rest.StringRequest;
+import com.yanzhenjie.nohttp.Headers;
+import com.yanzhenjie.nohttp.RequestMethod;
+import com.yanzhenjie.nohttp.rest.RestRequest;
+import com.yanzhenjie.nohttp.rest.StringRequest;
 
 
 /**
@@ -22,7 +22,7 @@ public class FastJsonRequest extends RestRequest<JSONObject> {
         super(url, requestMethod);
 
         // 设置Accept请求头，告诉服务器，我们需要application/json数据。
-        setAccept(Headers.HEAD_VALUE_ACCEPT_APPLICATION_JSON);
+        setAccept(Headers.HEAD_VALUE_CONTENT_TYPE_JSON);
     }
 
     /**

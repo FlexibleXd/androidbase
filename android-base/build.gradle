@@ -3,11 +3,11 @@ apply plugin: 'com.github.dcendents.android-maven'
 apply plugin: 'com.jfrog.bintray'
 
 android {
-    compileSdkVersion 26
+    compileSdkVersion 27
 
     defaultConfig {
         minSdkVersion 14
-        targetSdkVersion 26
+        targetSdkVersion 27
         versionCode 1
         versionName "1.0"
         testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
@@ -25,16 +25,16 @@ android {
 
 dependencies {
     implementation fileTree(include: ['*.jar'], dir: 'libs')
-    compile 'com.alibaba:fastjson:1.1.56.android'
+    implementation 'com.alibaba:fastjson:1.1.56.android'
     implementation("com.github.bumptech.glide:glide:4.5.0") {
         exclude group: "com.android.support"
     }
     annotationProcessor 'com.github.bumptech.glide:compiler:4.5.0'
-    compile 'org.greenrobot:eventbus:3.0.0'
-    compile 'com.yolanda.nohttp:nohttp:1.1.1'
-    compile 'com.jakewharton:butterknife:8.5.1'
-    compile 'com.android.support:recyclerview-v7:26.1.0'
-    implementation 'com.android.support:design:26.1.0'
+    implementation 'org.greenrobot:eventbus:3.1.1'
+    implementation 'com.yanzhenjie.nohttp:nohttp:1.1.11'
+    implementation 'com.jakewharton:butterknife:8.8.1'
+    implementation 'com.android.support:recyclerview-v7:27.1.1'
+    implementation 'com.android.support:design:27.1.1'
 }
 
 // 项目引用的版本号

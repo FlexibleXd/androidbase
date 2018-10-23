@@ -13,7 +13,8 @@ import android.view.Window;
 import android.view.WindowManager;
 import android.widget.FrameLayout;
 
-import com.yolanda.nohttp.rest.Request;
+
+import com.yanzhenjie.nohttp.rest.Request;
 
 import java.io.Serializable;
 import java.lang.reflect.Field;

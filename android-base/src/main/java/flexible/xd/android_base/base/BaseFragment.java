@@ -9,7 +9,8 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.FrameLayout;
 
-import com.yolanda.nohttp.rest.Request;
+
+import com.yanzhenjie.nohttp.rest.Request;
 
 import java.io.Serializable;
 
