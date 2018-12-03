@@ -11,8 +11,8 @@ import android.widget.FrameLayout;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
+
 import butterknife.ButterKnife;
-import flexible.xd.android_base.GlideApp;
 import flexible.xd.android_base.R;
 import flexible.xd.android_base.model.listener.NoDataOnClickListener;
 import flexible.xd.android_base.model.listener.RefreshOnClickListener;
@@ -28,7 +28,7 @@ import flexible.xd.android_base.utils.StringUtils;
  * Created by flexibleXd on 2016/12/23.
  */
 
-public class ToolBarActivity extends BaseActivity implements SwipeBackActivityBase {
+public abstract class ToolBarActivity extends BaseActivity implements SwipeBackActivityBase {
     private Toolbar toolbar;
     private ViewGroup container;
     private ViewGroup frame;
@@ -43,7 +43,7 @@ public class ToolBarActivity extends BaseActivity implements SwipeBackActivityBa
     private SwipeBackActivityHelper mHelper;
 
     @Override
-    public void onCreate(Bundle savedInstanceState) {
+    protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         mHelper = new SwipeBackActivityHelper(this);
         mHelper.onActivityCreate();
@@ -106,14 +106,14 @@ public class ToolBarActivity extends BaseActivity implements SwipeBackActivityBa
     public void noDataShow(int imgId, String text) {
         if (noData == null) {
             noData = LayoutInflater.from(this).inflate(R.layout.view_no_data, null);
-            tvNoData = ButterKnife.findById(noData, R.id.tv_no_data);
-            ivNoData = ButterKnife.findById(noData, R.id.iv_no);
-            tvNoClick = ButterKnife.findById(noData, R.id.tv_click);
+            tvNoData = noData.findViewById(R.id.tv_no_data);
+            ivNoData = noData.findViewById(R.id.iv_no);
+            tvNoClick = noData.findViewById(R.id.tv_click);
             LinearLayout.LayoutParams params = new LinearLayout.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT, LinearLayout.LayoutParams.MATCH_PARENT);
             params.gravity = Gravity.CENTER;
             getContainer().addView(noData, params);
         }
-        GlideApp.with(BaseApp.getAppContext()).load(imgId).into(ivNoData);
+        ivNoData.setImageResource(imgId);
         tvNoData.setText(text);
         tvNoClick.setVisibility(View.GONE);
         noData.setVisibility(View.VISIBLE);
@@ -129,14 +129,14 @@ public class ToolBarActivity extends BaseActivity implements SwipeBackActivityBa
     public void noDataShow(int imgId, String text, String clickText, NoDataOnClickListener listener) {
         if (noData == null) {
             noData = LayoutInflater.from(this).inflate(R.layout.view_no_data, null);
-            tvNoData = ButterKnife.findById(noData, R.id.tv_no_data);
-            ivNoData = ButterKnife.findById(noData, R.id.iv_no);
-            tvNoClick = ButterKnife.findById(noData, R.id.tv_click);
+            tvNoData = noData.findViewById(R.id.tv_no_data);
+            ivNoData = noData.findViewById(R.id.iv_no);
+            tvNoClick = noData.findViewById(R.id.tv_click);
             LinearLayout.LayoutParams params = new LinearLayout.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT, LinearLayout.LayoutParams.MATCH_PARENT);
             params.gravity = Gravity.CENTER;
             getContainer().addView(noData, params);
         }
-        GlideApp.with(BaseApp.getAppContext()).load(imgId).into(ivNoData);
+        ivNoData.setImageResource(imgId);
         tvNoData.setText(text);
         tvNoClick.setText(clickText);
         tvNoClick.setVisibility(View.VISIBLE);
@@ -169,7 +169,7 @@ public class ToolBarActivity extends BaseActivity implements SwipeBackActivityBa
         }
         if (noNet == null) {
             noNet = LayoutInflater.from(this).inflate(R.layout.view_no_net, null);
-            tvRefresh = ButterKnife.findById(noNet, R.id.tv_refresh);
+            tvRefresh = noNet.findViewById(R.id.tv_refresh);
             FrameLayout.LayoutParams params = new FrameLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.MATCH_PARENT);
             params.gravity = Gravity.CENTER;
             getContainer().addView(noNet, params);

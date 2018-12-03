@@ -2,6 +2,9 @@ package flexible.xd.android_base.base;
 
 import android.app.Activity;
 import android.content.Intent;
+import android.os.Bundle;
+import android.support.annotation.NonNull;
+import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
 import android.view.Gravity;
 import android.view.LayoutInflater;
@@ -13,17 +16,55 @@ import android.widget.FrameLayout;
 import com.yanzhenjie.nohttp.rest.Request;
 
 import java.io.Serializable;
+
 import flexible.xd.android_base.R;
-import flexible.xd.android_base.network.CallServer;
-import flexible.xd.android_base.network.NoHttpListener;
-import flexible.xd.android_base.network.NoHttpManager;
+import flexible.xd.android_base.network.nohttp.CallServer;
+import flexible.xd.android_base.network.nohttp.NoHttpListener;
+import flexible.xd.android_base.network.nohttp.NoHttpManager;
+import io.reactivex.disposables.CompositeDisposable;
+import io.reactivex.disposables.Disposable;
+
 import static flexible.xd.android_base.utils.ToastUtil.showShort;
 
 /**
  * Created by flexibleXd on 2016/12/22.
  */
 
-public class BaseFragment extends Fragment implements View.OnClickListener {
+public abstract class BaseFragment extends Fragment implements View.OnClickListener {
+
+    private View v;
+
+    protected abstract void initView();
+
+    protected abstract void initData();
+
+    protected abstract void initEvent();
+
+    protected abstract int layoutId();
+
+
+    public View getContentView() {
+        return v;
+    }
+
+    protected CompositeDisposable disposables;
+
+    protected void addDisposable(@NonNull Disposable d) {
+        if (disposables == null)
+            disposables = new CompositeDisposable();
+        disposables.add(d);
+    }
+
+    @Nullable
+    @Override
+    public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
+        v = inflater.inflate(layoutId(), null);
+        initView();
+        initData();
+        initEvent();
+        return v;
+    }
+
     public void startActivity(Class<? extends Activity> clazz) {
         Intent intent = new Intent();
         intent.setClass(getActivity(), clazz);
@@ -97,6 +138,14 @@ public class BaseFragment extends Fragment implements View.OnClickListener {
     @Override
     public void onClick(View v) {
 
+    }
+
+    @Override
+    public void onDestroy() {
+        super.onDestroy();
+        CallServer.getInstance().cancelBySign(cancelObject);
+        if (disposables != null && !disposables.isDisposed())
+            disposables.dispose();
     }
 
     private View loadProgress;

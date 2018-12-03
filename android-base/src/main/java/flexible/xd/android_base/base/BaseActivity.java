@@ -2,8 +2,8 @@ package flexible.xd.android_base.base;
 
 import android.app.Activity;
 import android.content.Intent;
-import android.content.pm.ActivityInfo;
 import android.os.Bundle;
+import android.support.annotation.NonNull;
 import android.support.v7.app.AppCompatActivity;
 import android.view.Gravity;
 import android.view.LayoutInflater;
@@ -17,9 +17,11 @@ import com.yanzhenjie.nohttp.rest.Request;
 import java.io.Serializable;
 
 import flexible.xd.android_base.R;
-import flexible.xd.android_base.network.CallServer;
-import flexible.xd.android_base.network.NoHttpListener;
-import flexible.xd.android_base.network.NoHttpManager;
+import flexible.xd.android_base.network.nohttp.CallServer;
+import flexible.xd.android_base.network.nohttp.NoHttpListener;
+import flexible.xd.android_base.network.nohttp.NoHttpManager;
+import io.reactivex.disposables.CompositeDisposable;
+import io.reactivex.disposables.Disposable;
 
 import static flexible.xd.android_base.utils.ToastUtil.showShort;
 
@@ -27,14 +29,34 @@ import static flexible.xd.android_base.utils.ToastUtil.showShort;
 /**
  * Created by flexible on 2016/12/12.
  */
-public class BaseActivity extends AppCompatActivity implements View.OnClickListener {
+public abstract class BaseActivity extends AppCompatActivity implements View.OnClickListener {
+
+
     private View loadProgress;
 
+    protected abstract void initView();
+
+    protected abstract void initData();
+
+    protected abstract void initEvent();
+
+    protected abstract int layoutId();
+
+    protected CompositeDisposable disposables;
+
+    protected void addDisposable(@NonNull Disposable d) {
+        if (disposables == null)
+            disposables = new CompositeDisposable();
+        disposables.add(d);
+    }
 
     @Override
-    public void onCreate(Bundle savedInstanceState) {
-        setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_PORTRAIT);
+    protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        setContentView(layoutId());
+        initView();
+        initData();
+        initEvent();
     }
 
     /**
@@ -126,6 +148,14 @@ public class BaseActivity extends AppCompatActivity implements View.OnClickListe
 
         CallServer.getInstance().add(what, request, new NoHttpManager<T>(request,
                 httpListener, isLoad, this));
+    }
+
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        CallServer.getInstance().cancelBySign(cancelObject);
+        if (disposables != null && !disposables.isDisposed())
+            disposables.dispose();
     }
 
     @Override
