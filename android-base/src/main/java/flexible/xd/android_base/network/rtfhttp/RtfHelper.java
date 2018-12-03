@@ -4,6 +4,7 @@ import android.util.Log;
 
 import com.valdio.cookiejar.serializablecookiejar.SerializableCookieJar;
 
+import java.util.IdentityHashMap;
 import java.util.concurrent.TimeUnit;
 
 import flexible.xd.android_base.base.BaseApp;
@@ -21,12 +22,12 @@ import retrofit2.adapter.rxjava2.RxJava2CallAdapterFactory;
 public class RtfHelper<T> {
     private static RtfHelper instance;
     private T api;
-    private static String rtfBaseUrl;
-    private static Boolean DEBUG = false;
-    private static Class<?> apiClazz;
-    private static int rtfConnectTimeout = 10;
-    private static int rtfReadTimeout = 15;
-    private static int rtfWriteTimeout = 15;
+    private  String rtfBaseUrl;
+    private  Boolean DEBUG = false;
+    private  Class<?> apiClazz;
+    private  int rtfConnectTimeout = 10;
+    private  int rtfReadTimeout = 15;
+    private  int rtfWriteTimeout = 15;
 
     public static RtfHelper getInstance() {
         if (instance == null) {
@@ -40,22 +41,9 @@ public class RtfHelper<T> {
         return instance;
     }
 
-    public static void init(String baseUrl, Class<?> clazz) {
+    public  void init(String baseUrl, Class<T> clazz) {
         rtfBaseUrl = baseUrl;
         apiClazz = clazz;
-    }
-
-    public static void init(String baseUrl, Class<?> clazz, int connectTimeout, int readTimeout, int writeTimeout) {
-        init(baseUrl, clazz);
-        rtfConnectTimeout = connectTimeout;
-        rtfReadTimeout = readTimeout;
-        rtfWriteTimeout = writeTimeout;
-    }
-
-    private RtfHelper() {
-        if (rtfBaseUrl == null || rtfBaseUrl.length() == 0 || apiClazz == null) {
-            throw new RuntimeException("you should init first!");
-        }
         SerializableCookieJar cookieJar = new SerializableCookieJar(BaseApp.getAppContext());
         OkHttpClient.Builder httpBuilder = new OkHttpClient.Builder()
                 .hostnameVerifier((s, sslSession) -> true)
@@ -79,18 +67,33 @@ public class RtfHelper<T> {
         OkHttpClient okHttpClient = httpBuilder.build();
 
         Retrofit retrofit = new Retrofit.Builder()
-                .baseUrl(rtfBaseUrl)
+                .baseUrl(baseUrl)
                 .client(okHttpClient)
                 .addConverterFactory(FastJsonConverterFactory.create())
                 .addCallAdapterFactory(RxJava2CallAdapterFactory.create())
                 .build();
 
-        api = retrofit.create((Class<T>) apiClazz);
+        api = retrofit.create(clazz);
+    }
+
+    public void init(String baseUrl, Class<T> clazz, int connectTimeout, int readTimeout, int writeTimeout) {
+        init(baseUrl, clazz);
+        rtfConnectTimeout = connectTimeout;
+        rtfReadTimeout = readTimeout;
+        rtfWriteTimeout = writeTimeout;
+    }
+
+    private RtfHelper() {
     }
 
     public T getApiService() {
-        return api;
+        if (api == null ) {
+            throw new RuntimeException("you should init first!");
+        }
+        if (rtfBaseUrl == null ||  apiClazz == null) {
+            throw new RuntimeException("need baseUrl or retrofit Api class");
+        }
+
+        return api  ;
     }
-
-
 }

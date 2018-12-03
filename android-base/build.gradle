@@ -21,32 +21,33 @@ android {
             proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
         }
     }
+    compileOptions {
+        targetCompatibility 1.8
+        sourceCompatibility 1.8
+    }
 }
 
 dependencies {
-
     implementation fileTree(include: ['*.jar'], dir: 'libs')
-    implementation 'com.alibaba:fastjson:1.1.56.android'
-    implementation("com.github.bumptech.glide:glide:4.5.0") {
-    implementation 'com.alibaba:fastjson:1.1.56.android'
-    implementation('com.github.bumptech.glide:glide:4.8.0') {
+    api 'com.alibaba:fastjson:1.2.53'
+    api('com.github.bumptech.glide:glide:4.8.0') {
         exclude group: "com.android.support"
     }
-    annotationProcessor 'com.github.bumptech.glide:compiler:4.5.0'
-    implementation 'org.greenrobot:eventbus:3.1.1'
-    implementation 'com.yanzhenjie.nohttp:nohttp:1.1.11'
-    implementation 'com.jakewharton:butterknife:8.8.1'
-    implementation 'com.android.support:recyclerview-v7:27.1.1'
-    implementation 'com.android.support:design:27.1.1'
     annotationProcessor 'com.github.bumptech.glide:compiler:4.8.0'
-    implementation 'org.greenrobot:eventbus:3.1.1'
-    implementation 'com.yanzhenjie.nohttp:nohttp:1.1.11'
-    implementation('com.jakewharton:butterknife:8.8.1') {
+    api 'org.greenrobot:eventbus:3.1.1'
+    api 'com.yanzhenjie.nohttp:nohttp:1.1.11'
+    api('com.jakewharton:butterknife:8.8.1') {
         exclude group: "com.android.support"
     }
     implementation 'com.android.support:recyclerview-v7:27.1.1'
     implementation 'com.android.support:design:27.1.1'
-
+    api 'com.squareup.okhttp3:logging-interceptor:3.10.0'
+    api 'com.github.valdio:SerializableCookieJar:1.0.0'
+    api 'io.reactivex.rxjava2:rxjava:2.2.4'
+    api 'io.reactivex.rxjava2:rxandroid:2.1.0'
+    api 'com.squareup.retrofit2:retrofit:2.5.0'
+    api 'com.squareup.retrofit2:adapter-rxjava2:2.3.0'
+    testImplementation 'junit:junit:4.12'
 }
 
 // 项目引用的版本号
