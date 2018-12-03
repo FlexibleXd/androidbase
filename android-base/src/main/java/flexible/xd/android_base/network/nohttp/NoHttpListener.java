@@ -1,4 +1,4 @@
-package flexible.xd.android_base.network;
+package flexible.xd.android_base.network.nohttp;
 
 
 import com.yanzhenjie.nohttp.rest.Response;

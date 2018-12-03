@@ -1,9 +1,10 @@
-package flexible.xd.android_base.network;
+package flexible.xd.android_base.network.nohttp;
 
 import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONObject;
 import com.yanzhenjie.nohttp.Headers;
 import com.yanzhenjie.nohttp.RequestMethod;
+import com.yanzhenjie.nohttp.rest.Request;
 import com.yanzhenjie.nohttp.rest.RestRequest;
 import com.yanzhenjie.nohttp.rest.StringRequest;
 
@@ -12,7 +13,7 @@ import com.yanzhenjie.nohttp.rest.StringRequest;
  * Created by flexibleXd on 2016/12/22.
  */
 
-public class FastJsonRequest extends RestRequest<JSONObject> {
+public class FastJsonRequest extends Request<JSONObject> {
 
     public FastJsonRequest(String url) {
         this(url, RequestMethod.GET);
