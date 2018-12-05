@@ -19,15 +19,14 @@ import retrofit2.adapter.rxjava2.RxJava2CallAdapterFactory;
  * author : flexible
  * email : lgd19940421@163.com
  **/
-public class RtfHelper<T> {
+public class RtfHelper {
     private static RtfHelper instance;
-    private T api;
     private  String rtfBaseUrl;
     private  Boolean DEBUG = false;
-    private  Class<?> apiClazz;
     private  int rtfConnectTimeout = 10;
     private  int rtfReadTimeout = 15;
     private  int rtfWriteTimeout = 15;
+    private Retrofit retrofit;
 
     public static RtfHelper getInstance() {
         if (instance == null) {
@@ -41,9 +40,8 @@ public class RtfHelper<T> {
         return instance;
     }
 
-    public  void init(String baseUrl, Class<T> clazz) {
+    public   void init(String baseUrl) {
         rtfBaseUrl = baseUrl;
-        apiClazz = clazz;
         SerializableCookieJar cookieJar = new SerializableCookieJar(BaseApp.getAppContext());
         OkHttpClient.Builder httpBuilder = new OkHttpClient.Builder()
                 .hostnameVerifier((s, sslSession) -> true)
@@ -66,18 +64,18 @@ public class RtfHelper<T> {
 
         OkHttpClient okHttpClient = httpBuilder.build();
 
-        Retrofit retrofit = new Retrofit.Builder()
+        retrofit = new Retrofit.Builder()
                 .baseUrl(baseUrl)
                 .client(okHttpClient)
                 .addConverterFactory(FastJsonConverterFactory.create())
                 .addCallAdapterFactory(RxJava2CallAdapterFactory.create())
                 .build();
 
-        api = retrofit.create(clazz);
+
     }
 
-    public void init(String baseUrl, Class<T> clazz, int connectTimeout, int readTimeout, int writeTimeout) {
-        init(baseUrl, clazz);
+    public void init(String baseUrl, int connectTimeout, int readTimeout, int writeTimeout) {
+        init(baseUrl);
         rtfConnectTimeout = connectTimeout;
         rtfReadTimeout = readTimeout;
         rtfWriteTimeout = writeTimeout;
@@ -86,14 +84,10 @@ public class RtfHelper<T> {
     private RtfHelper() {
     }
 
-    public T getApiService() {
-        if (api == null ) {
-            throw new RuntimeException("you should init first!");
-        }
-        if (rtfBaseUrl == null ||  apiClazz == null) {
+    public <T> T getApiService(Class<T> t) {
+        if (rtfBaseUrl == null ) {
             throw new RuntimeException("need baseUrl or retrofit Api class");
         }
-
-        return api  ;
+        return (T) retrofit.create(t);
     }
 }
