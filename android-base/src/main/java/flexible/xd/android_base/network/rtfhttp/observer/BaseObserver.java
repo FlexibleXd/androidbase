@@ -19,7 +19,6 @@ public abstract class BaseObserver<T> implements Observer<T>, ISubscriber<T> {
     public void onNext(T t) {
         //封装不同网络请求成功、失败规则
         onSuccess(t);
-
     }
 
     @Override
@@ -36,8 +35,4 @@ public abstract class BaseObserver<T> implements Observer<T>, ISubscriber<T> {
         }
     }
 
-    @Override
-    public void onComplete() {
-
-    }
 }
