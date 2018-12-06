@@ -21,12 +21,15 @@ import retrofit2.adapter.rxjava2.RxJava2CallAdapterFactory;
  **/
 public class RtfHelper {
     private static RtfHelper instance;
-    private  String rtfBaseUrl;
-    private  Boolean DEBUG = false;
-    private  int rtfConnectTimeout = 10;
-    private  int rtfReadTimeout = 15;
-    private  int rtfWriteTimeout = 15;
+    private String rtfBaseUrl;
+    private Boolean DEBUG = false;
+    private int rtfConnectTimeout = 10;
+    private int rtfReadTimeout = 15;
+    private int rtfWriteTimeout = 15;
     private Retrofit retrofit;
+
+    private RtfHelper() {
+    }
 
     public static RtfHelper getInstance() {
         if (instance == null) {
@@ -36,11 +39,14 @@ public class RtfHelper {
                 }
             }
         }
-
         return instance;
     }
-
-    public   void init(String baseUrl) {
+    /**
+     * 初始化
+     *
+     * @param baseUrl
+     */
+    public void init(String baseUrl) {
         rtfBaseUrl = baseUrl;
         SerializableCookieJar cookieJar = new SerializableCookieJar(BaseApp.getAppContext());
         OkHttpClient.Builder httpBuilder = new OkHttpClient.Builder()
@@ -70,23 +76,27 @@ public class RtfHelper {
                 .addConverterFactory(FastJsonConverterFactory.create())
                 .addCallAdapterFactory(RxJava2CallAdapterFactory.create())
                 .build();
-
-
     }
 
+    /**
+     * 初始化
+     *
+     * @param baseUrl
+     * @param connectTimeout 连接超时时间
+     * @param readTimeout 读取超时时间
+     * @param writeTimeout 写入超时时间
+     */
     public void init(String baseUrl, int connectTimeout, int readTimeout, int writeTimeout) {
-        init(baseUrl);
         rtfConnectTimeout = connectTimeout;
         rtfReadTimeout = readTimeout;
         rtfWriteTimeout = writeTimeout;
+        init(baseUrl);
     }
 
-    private RtfHelper() {
-    }
 
     public <T> T getApiService(Class<T> t) {
-        if (rtfBaseUrl == null ) {
-            throw new RuntimeException("need baseUrl or retrofit Api class");
+        if (rtfBaseUrl == null) {
+            throw new RuntimeException("you should init first ");
         }
         return (T) retrofit.create(t);
     }
