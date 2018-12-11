@@ -64,6 +64,7 @@ public class BaseApp extends Application {
                 AppManager.getAppManager().removeActivity(activity);
             }
         });
+
     }
 
 
