@@ -1,4 +1,4 @@
 # androidbase
 androud base app
 # gradle
-compile 'flexible.xd:android-base:1.0.15'
+compile 'flexible.xd:android-base:1.0.16'
