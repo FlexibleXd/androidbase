@@ -10,12 +10,16 @@ import android.net.Uri;
 import android.os.Build;
 import android.os.Environment;
 import android.os.IBinder;
+import android.support.v4.content.FileProvider;
 import android.text.TextUtils;
+
+import java.io.File;
+
 import flexible.xd.android_base.R;
 
 
 /**
- * Created by flexible on 2016/8/24
+ * Created by flexible on 2018/12/11
  */
 public class DownService extends Service {
     private DownloadManager downManager;
@@ -84,12 +88,45 @@ public class DownService extends Service {
     class DownLoadCompleteReceiver extends BroadcastReceiver {
         public void onReceive(Context context, Intent intent) {
             if (intent.getAction().equals(DownloadManager.ACTION_DOWNLOAD_COMPLETE)) {
-                AppUtil.installApp(filePath, authority);
+                installApp(getFileByPath(filePath), authority);
                 stopSelf();
                 unregisterReceiver(this);
             }
         }
     }
+
+    public File getFileByPath(final String filePath) {
+        if (filePath == null) return null;
+        for (int i = 0, len = filePath.length(); i < len; ++i) {
+            if (!Character.isWhitespace(filePath.charAt(i))) {
+                return new File(filePath);
+            }
+        }
+        return null;
+    }
+
+    public void installApp(final File file, final String authority) {
+        if (file == null || !file.exists()) return;
+        Utils.getApp().startActivity(getInstallAppIntent(file, authority, true));
+    }
+
+    public Intent getInstallAppIntent(final File file,
+                                      final String authority,
+                                      final boolean isNewTask) {
+        if (file == null) return null;
+        Intent intent = new Intent(Intent.ACTION_VIEW);
+        Uri data;
+        String type = "application/vnd.android.package-archive";
+        if (Build.VERSION.SDK_INT < Build.VERSION_CODES.N) {
+            data = Uri.fromFile(file);
+        } else {
+            intent.setFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION);
+            data = FileProvider.getUriForFile(Utils.getApp(), authority, file);
+        }
+        intent.setDataAndType(data, type);
+        return isNewTask ? intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK) : intent;
+    }
+
 }
 
 

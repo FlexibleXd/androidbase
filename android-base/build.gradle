@@ -51,7 +51,7 @@ dependencies {
 }
 
 // 项目引用的版本号
-version = "1.0.17"
+version = "1.0.18"
 
 // 定义两个链接，下面会用到。
 def siteUrl = 'https://github.com/FlexibleXd/androidbase' // 项目主页。
