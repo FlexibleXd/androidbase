@@ -47,7 +47,6 @@ public class LoadingDialog extends Dialog {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        startAnimation(loadIv);
         setContentView(loadIv, new LinearLayout.LayoutParams(
                 LinearLayout.LayoutParams.MATCH_PARENT,
                 LinearLayout.LayoutParams.MATCH_PARENT));
@@ -58,5 +57,21 @@ public class LoadingDialog extends Dialog {
         valueAnimator.setDuration(2000);
         valueAnimator.setRepeatCount(ValueAnimator.INFINITE);//无限循
         valueAnimator.start();
+    }
+
+    @Override
+    public void show() {
+        startAnimation(loadIv);
+        super.show();
+    }
+
+    @Override
+    public void dismiss() {
+        super.dismiss();
+        stopAnimation();
+    }
+
+    private void stopAnimation() {
+        loadIv.clearAnimation();
     }
 }

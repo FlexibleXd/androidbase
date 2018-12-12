@@ -6,16 +6,19 @@ import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
+import android.database.Cursor;
 import android.net.Uri;
 import android.os.Build;
 import android.os.Environment;
 import android.os.IBinder;
 import android.support.v4.content.FileProvider;
 import android.text.TextUtils;
+import android.util.Log;
 
 import java.io.File;
 
 import flexible.xd.android_base.R;
+import flexible.xd.android_base.base.BaseApp;
 
 
 /**
@@ -25,7 +28,31 @@ public class DownService extends Service {
     private DownloadManager downManager;
     private String filePath;
     private String authority;
+    private long id;
+    static DownloadListener downloadListener;
+    static boolean slient = false;
 
+    /**
+     * 启动下载，下载完成安装
+     *
+     * @param intent 需要传入下载链接，文件名，7.0的authority
+     */
+    public static void startDownLoad(Intent intent) {
+        slient = false;
+        BaseApp.getAppContext().startService(intent);
+    }
+
+    /**
+     * 启动下载，下载完成安装
+     *
+     * @param intent   需要传入下载链接，文件名，7.0的authority
+     * @param listener 下载完成监听，不自动安装
+     */
+    public static void startDownLoad(Intent intent, DownloadListener listener) {
+        slient = true;
+        downloadListener = listener;
+        BaseApp.getAppContext().startService(intent);
+    }
 
     @Override
     public IBinder onBind(Intent intent) {
@@ -81,21 +108,52 @@ public class DownService extends Service {
         //设置文件存放目录
         request.setDestinationInExternalPublicDir(Environment.DIRECTORY_DOWNLOADS, filePath);
         downManager = (DownloadManager) getSystemService(Context.DOWNLOAD_SERVICE);
-        downManager.enqueue(request);
-
+        id = downManager.enqueue(request);
     }
 
     class DownLoadCompleteReceiver extends BroadcastReceiver {
         public void onReceive(Context context, Intent intent) {
             if (intent.getAction().equals(DownloadManager.ACTION_DOWNLOAD_COMPLETE)) {
-                installApp(getFileByPath(filePath), authority);
-                stopSelf();
-                unregisterReceiver(this);
+                long downloadApkId = intent.getLongExtra(DownloadManager.EXTRA_DOWNLOAD_ID, -1L);
+                if (id == downloadApkId) {
+                    if (slient) {
+                        downloadListener.downloadSuccess();
+                    } else {
+                        DownloadManager.Query downloadQuery = new DownloadManager.Query();
+                        downloadQuery.setFilterById(id);
+                        Cursor cursor = downManager.query(downloadQuery);
+                        if (cursor.moveToFirst()) {
+                            int fileNameIdx =
+                                    cursor.getColumnIndex(DownloadManager.COLUMN_LOCAL_FILENAME);
+                            String fileName = cursor.getString(fileNameIdx);
+                            installApp(getFileByPath(fileName), authority);
+                            stopSelf();
+                            unregisterReceiver(this);
+                        }
+                        cursor.close();
+                    }
+
+
+                }
             }
+
+
         }
     }
 
-    public File getFileByPath(final String filePath) {
+    /**
+     * 自动搜索系统download文件夹判断是否有已经下载过的apk
+     *
+     * @param filePath 下载文件名
+     * @return
+     */
+    public boolean isDownload(String filePath) {
+        File download = Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DOWNLOADS);
+        File file = new File(download.getPath() + File.separator + filePath);
+        return file != null && file.exists();
+    }
+
+    private File getFileByPath(final String filePath) {
         if (filePath == null) return null;
         for (int i = 0, len = filePath.length(); i < len; ++i) {
             if (!Character.isWhitespace(filePath.charAt(i))) {
@@ -105,14 +163,14 @@ public class DownService extends Service {
         return null;
     }
 
-    public void installApp(final File file, final String authority) {
+    private void installApp(final File file, final String authority) {
         if (file == null || !file.exists()) return;
         Utils.getApp().startActivity(getInstallAppIntent(file, authority, true));
     }
 
-    public Intent getInstallAppIntent(final File file,
-                                      final String authority,
-                                      final boolean isNewTask) {
+    private Intent getInstallAppIntent(final File file,
+                                       final String authority,
+                                       final boolean isNewTask) {
         if (file == null) return null;
         Intent intent = new Intent(Intent.ACTION_VIEW);
         Uri data;
@@ -127,6 +185,9 @@ public class DownService extends Service {
         return isNewTask ? intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK) : intent;
     }
 
+    public interface DownloadListener {
+        void downloadSuccess();
+    }
 }
 
 
