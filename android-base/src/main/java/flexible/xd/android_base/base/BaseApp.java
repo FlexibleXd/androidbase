@@ -22,7 +22,6 @@ public class BaseApp extends Application {
     @Override
     public void onCreate() {
         super.onCreate();
-        noHttpConfig();
         ctx = getApplicationContext();
         activityManager();
     }
@@ -31,7 +30,7 @@ public class BaseApp extends Application {
         registerActivityLifecycleCallbacks(new Application.ActivityLifecycleCallbacks() {
             @Override
             public void onActivityCreated(Activity activity, Bundle savedInstanceState) {
-                AppManager.  getAppManager().addActivity(activity);
+                AppManager.getAppManager().addActivity(activity);
             }
 
             @Override
@@ -68,17 +67,6 @@ public class BaseApp extends Application {
     }
 
 
-    private void noHttpConfig() {
-        InitializationConfig config = InitializationConfig.newBuilder(this)
-                // 全局连接服务器超时时间，单位毫秒，默认10s。
-                .connectionTimeout(10 * 1000)
-                // 全局等待服务器响应超时时间，单位毫秒，默认10s。
-                .readTimeout(10 * 1000).cacheStore(new DBCacheStore(this).setEnable(true))
-                .build();
-        NoHttp.initialize(config);
-//        Logger.setDebug(Config.DEBUG); // 开启NoHttp调试模式。
-        Logger.setTag("flexible"); // 设置NoHttp打印Log的TAG。
-    }
 
     public static Context getAppContext() {
         return ctx;

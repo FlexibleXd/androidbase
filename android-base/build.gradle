@@ -10,7 +10,7 @@ android {
         targetSdkVersion 27
         versionCode 1
         versionName "1.0"
-        testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
+        testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
 
     }
 
@@ -29,18 +29,11 @@ android {
 
 dependencies {
     implementation fileTree(include: ['*.jar'], dir: 'libs')
-    api 'com.alibaba:fastjson:1.2.53'
-    api('com.github.bumptech.glide:glide:4.8.0') {
-        exclude group: "com.android.support"
-    }
-    annotationProcessor 'com.github.bumptech.glide:compiler:4.8.0'
-    api 'org.greenrobot:eventbus:3.1.1'
+    api 'com.alibaba:fastjson:1.2.54'
     api 'com.yanzhenjie.nohttp:nohttp:1.1.11'
-    api('com.jakewharton:butterknife:8.8.1') {
-        exclude group: "com.android.support"
-    }
-    implementation 'com.android.support:recyclerview-v7:27.1.1'
-    implementation 'com.android.support:design:27.1.1'
+    api('com.jakewharton:butterknife:8.8.1')
+    implementation 'androidx.recyclerview:recyclerview:1.0.0'
+    implementation 'com.google.android.material:material:1.1.0-alpha02'
     api 'com.squareup.okhttp3:logging-interceptor:3.10.0'
     api 'com.github.valdio:SerializableCookieJar:1.0.0'
     api 'io.reactivex.rxjava2:rxjava:2.2.4'
@@ -51,7 +44,7 @@ dependencies {
 }
 
 // 项目引用的版本号
-version = "1.0.18"
+version = "0.1.1"
 
 // 定义两个链接，下面会用到。
 def siteUrl = 'https://github.com/FlexibleXd/androidbase' // 项目主页。

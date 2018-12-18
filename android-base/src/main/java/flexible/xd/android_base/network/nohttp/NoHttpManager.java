@@ -6,7 +6,6 @@ import com.yanzhenjie.nohttp.rest.OnResponseListener;
 import com.yanzhenjie.nohttp.rest.Request;
 import com.yanzhenjie.nohttp.rest.Response;
 
-import org.greenrobot.eventbus.EventBus;
 import flexible.xd.android_base.R;
 import flexible.xd.android_base.model.event.LoginEvent;
 import flexible.xd.android_base.utils.LogUtils;
@@ -64,7 +63,7 @@ public class NoHttpManager<T> implements OnResponseListener<T> {
     @Override
     public void onSucceed(int what, Response<T> response) {
         if (response.responseCode() == 401) {
-            EventBus.getDefault().post(new LoginEvent());
+//            EventBus.getDefault().post(new LoginEvent());
             return;
         }
         if (response.get() == null) {

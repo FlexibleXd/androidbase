@@ -1,11 +1,6 @@
 package flexible.xd.android_base.refrensh;
 
 import android.content.Context;
-import android.support.v7.widget.GridLayoutManager;
-import android.support.v7.widget.LinearLayoutManager;
-import android.support.v7.widget.RecyclerView;
-import android.support.v7.widget.RecyclerView.ViewHolder;
-import android.support.v7.widget.StaggeredGridLayoutManager;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -14,6 +9,11 @@ import java.util.Collection;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
+
+import androidx.recyclerview.widget.GridLayoutManager;
+import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
+import androidx.recyclerview.widget.StaggeredGridLayoutManager;
 import flexible.xd.android_base.R;
 import flexible.xd.android_base.base.BaseApp;
 
@@ -61,7 +61,7 @@ public abstract class BaseAdapter<T> extends RecyclerView.Adapter<RecyclerView.V
         if (viewType == CT_EMPTY) {
             return onCreateEmptyHolder(parent);
         }
-        ViewHolder viewHolder = null;
+        RecyclerView.ViewHolder viewHolder = null;
         if (isFootCell(viewType)) {
             if (isLoading) {
                 return onLoadMoreHolder(parent);
@@ -83,7 +83,7 @@ public abstract class BaseAdapter<T> extends RecyclerView.Adapter<RecyclerView.V
     }
 
     @Override
-    public void onBindViewHolder(ViewHolder holder, int position) {
+    public void onBindViewHolder(RecyclerView.ViewHolder holder, int position) {
         if (holderType.get(position) == CT_EMPTY) {
             if (holder instanceof EmptyVHolder) {
                 String string = emptyStr();
@@ -123,9 +123,9 @@ public abstract class BaseAdapter<T> extends RecyclerView.Adapter<RecyclerView.V
 
     protected abstract RecyclerView.ViewHolder onCreateFootVHolder(ViewGroup parent, int type);
 
-    protected abstract void onBindVHolder(ViewHolder holder, int position);
+    protected abstract void onBindVHolder(RecyclerView.ViewHolder holder, int position);
 
-    protected abstract void onBindFootVHolder(ViewHolder holder, int position);
+    protected abstract void onBindFootVHolder(RecyclerView.ViewHolder holder, int position);
 
     /**
      * 点击 长按事件
@@ -166,12 +166,12 @@ public abstract class BaseAdapter<T> extends RecyclerView.Adapter<RecyclerView.V
         return obj == null ? true : (obj.getClass().isArray() ? Array.getLength(obj) == 0 : (obj instanceof Collection ? ((Collection) obj).isEmpty() : (obj instanceof Map ? ((Map) obj).isEmpty() : false)));
     }
 
-    private ViewHolder onCreateEmptyHolder(ViewGroup parent) {
+    private RecyclerView.ViewHolder onCreateEmptyHolder(ViewGroup parent) {
         return BaseVHolder.newViewHolder(EmptyVHolder.class, parent,
                 R.layout.flexible__empty_holder);
     }
 
-    private ViewHolder onLoadMoreHolder(ViewGroup parent) {
+    private RecyclerView.ViewHolder onLoadMoreHolder(ViewGroup parent) {
         View view = LayoutInflater.from(parent.getContext()).inflate(
                 R.layout.flexible__load_more, parent, false);
         return new LoadMoreVHolder(view);

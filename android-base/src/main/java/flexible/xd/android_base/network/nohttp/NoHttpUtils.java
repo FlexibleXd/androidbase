@@ -4,19 +4,40 @@ import android.graphics.Bitmap;
 
 import com.yanzhenjie.nohttp.BitmapBinary;
 import com.yanzhenjie.nohttp.FileBinary;
+import com.yanzhenjie.nohttp.InitializationConfig;
+import com.yanzhenjie.nohttp.Logger;
 import com.yanzhenjie.nohttp.NoHttp;
 import com.yanzhenjie.nohttp.RequestMethod;
+import com.yanzhenjie.nohttp.cache.DBCacheStore;
 import com.yanzhenjie.nohttp.rest.Request;
 import com.yanzhenjie.nohttp.rest.Response;
+
 import org.json.JSONObject;
+
 import java.io.File;
 import java.util.Map;
+
+import flexible.xd.android_base.base.BaseApp;
 
 /**
  * Created by flexibleXd on 2016/12/22.
  */
 
 public class NoHttpUtils {
+
+    public static void noHttpConfig() {
+        InitializationConfig config = InitializationConfig.newBuilder(BaseApp.getAppContext())
+                // 全局连接服务器超时时间，单位毫秒，默认10s。
+                .connectionTimeout(10 * 1000)
+                // 全局等待服务器响应超时时间，单位毫秒，默认10s。
+                .readTimeout(10 * 1000).cacheStore(new DBCacheStore(BaseApp.getAppContext()).
+                        setEnable(true))
+                .build();
+        NoHttp.initialize(config);
+//        Logger.setDebug(Config.DEBUG); // 开启NoHttp调试模式。
+        Logger.setTag("flexible"); // 设置NoHttp打印Log的TAG。
+    }
+
     /**
      * stringRequest
      *

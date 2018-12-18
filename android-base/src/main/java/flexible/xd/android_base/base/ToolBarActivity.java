@@ -1,7 +1,7 @@
 package flexible.xd.android_base.base;
 
 import android.os.Bundle;
-import android.support.v7.widget.Toolbar;
+import androidx.appcompat.widget.Toolbar;
 import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.MenuItem;
@@ -12,7 +12,6 @@ import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
-import butterknife.ButterKnife;
 import flexible.xd.android_base.R;
 import flexible.xd.android_base.model.listener.NoDataOnClickListener;
 import flexible.xd.android_base.model.listener.RefreshOnClickListener;
