@@ -22,7 +22,7 @@ import retrofit2.adapter.rxjava2.RxJava2CallAdapterFactory;
 public class RtfHelper {
     private static RtfHelper instance;
     private String rtfBaseUrl;
-    private Boolean DEBUG = false;
+    private Boolean DEBUG = true;
     private int rtfConnectTimeout = 10;
     private int rtfReadTimeout = 15;
     private int rtfWriteTimeout = 15;
@@ -41,6 +41,7 @@ public class RtfHelper {
         }
         return instance;
     }
+
     /**
      * 初始化
      *
@@ -82,15 +83,25 @@ public class RtfHelper {
      * 初始化
      *
      * @param baseUrl
-     * @param connectTimeout 连接超时时间
-     * @param readTimeout 读取超时时间
-     * @param writeTimeout 写入超时时间
      */
-    public void init(String baseUrl, int connectTimeout, int readTimeout, int writeTimeout) {
+    public void init(String baseUrl, boolean debug) {
+        this.DEBUG = debug;
+        init(baseUrl);
+    }
+
+    /**
+     * 初始化
+     *
+     * @param baseUrl
+     * @param connectTimeout 连接超时时间
+     * @param readTimeout    读取超时时间
+     * @param writeTimeout   写入超时时间
+     */
+    public void init(String baseUrl, boolean debug, int connectTimeout, int readTimeout, int writeTimeout) {
         rtfConnectTimeout = connectTimeout;
         rtfReadTimeout = readTimeout;
         rtfWriteTimeout = writeTimeout;
-        init(baseUrl);
+        init(baseUrl, debug);
     }
 
 
