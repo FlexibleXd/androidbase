@@ -26,7 +26,7 @@ public abstract class BaseObserver<T> implements Observer<T>, ISubscriber<T> {
         if (e instanceof HttpException) {
             HttpException httpException = (HttpException) e;
             if (httpException.code() == 401) {//一般用于判断登录状态
-
+                network401();
             } else {
                 onFail("服务器异常，请稍后再试");
             }
@@ -34,8 +34,11 @@ public abstract class BaseObserver<T> implements Observer<T>, ISubscriber<T> {
             onFail("获取失败，请检查网络状态");
         }
     }
+
     @Override
     public void onComplete() {
 
     }
+
+    public abstract void network401();
 }

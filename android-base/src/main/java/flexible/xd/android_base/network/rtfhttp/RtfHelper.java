@@ -2,7 +2,11 @@ package flexible.xd.android_base.network.rtfhttp;
 
 import android.util.Log;
 
-import com.valdio.cookiejar.serializablecookiejar.SerializableCookieJar;
+
+import com.franmontiel.persistentcookiejar.ClearableCookieJar;
+import com.franmontiel.persistentcookiejar.PersistentCookieJar;
+import com.franmontiel.persistentcookiejar.cache.SetCookieCache;
+import com.franmontiel.persistentcookiejar.persistence.SharedPrefsCookiePersistor;
 
 import java.io.IOException;
 import java.util.concurrent.TimeUnit;
@@ -51,7 +55,7 @@ public class RtfHelper {
      */
     public void init(String baseUrl) {
         rtfBaseUrl = baseUrl;
-        SerializableCookieJar cookieJar = new SerializableCookieJar(BaseApp.getAppContext());
+        ClearableCookieJar cookieJar = new PersistentCookieJar(new SetCookieCache(), new SharedPrefsCookiePersistor(BaseApp.getAppContext()));
         okHttpClient = new OkHttpClient.Builder()
                 .hostnameVerifier((s, sslSession) -> true)
                 .cookieJar(cookieJar)
@@ -89,14 +93,15 @@ public class RtfHelper {
      */
     public void init(String baseUrl, Interceptor interceptor) {
         rtfBaseUrl = baseUrl;
-        SerializableCookieJar cookieJar = new SerializableCookieJar(BaseApp.getAppContext());
+        ClearableCookieJar cookieJar = new PersistentCookieJar(new SetCookieCache(), new SharedPrefsCookiePersistor(BaseApp.getAppContext()));
         okHttpClient = new OkHttpClient.Builder()
                 .hostnameVerifier((s, sslSession) -> true)
                 .cookieJar(cookieJar)
                 .connectTimeout(rtfConnectTimeout, TimeUnit.SECONDS)
                 .readTimeout(rtfReadTimeout, TimeUnit.SECONDS)
                 .writeTimeout(rtfWriteTimeout, TimeUnit.SECONDS);
-        okHttpClient.addInterceptor(interceptor);
+        if (null != interceptor)
+            okHttpClient.addInterceptor(interceptor);
         if (DEBUG) {
             //NONE：没有记录
             //BASIC：日志请求类型，URL，请求体的大小，响应状态和响应体的大小

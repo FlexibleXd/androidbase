@@ -8,11 +8,16 @@ import com.bumptech.glide.Glide;
 
 import org.junit.Test;
 
+import java.io.IOException;
+
 import flexible.xd.android_base.mvpBase.IBaseModel;
 import flexible.xd.android_base.network.rtfhttp.RtfHelper;
 import flexible.xd.android_base.network.rtfhttp.Transformer;
 import flexible.xd.android_base.network.rtfhttp.observer.BaseObserver;
 import io.reactivex.disposables.Disposable;
+import okhttp3.Interceptor;
+import okhttp3.Request;
+import okhttp3.Response;
 
 import static junit.framework.Assert.assertEquals;
 
@@ -29,26 +34,26 @@ public class ExampleUnitTest {
 
     @Test
     public void rtfTest() {
-        RtfHelper.getInstance().init("");
-        RtfHelper.getInstance().init("", 10, 10, 10);
-        RtfHelper.getInstance().getApiService(ApiService.class).login("","").compose(Transformer.schedule())
-                .subscribe(new BaseObserver<IBaseModel>() {
+        RtfHelper.getInstance().init("http://www.baidu.com");
+
+        RtfHelper.getInstance().getOkHttpClient().addInterceptor(new Interceptor() {
             @Override
-            public void doOnSubscribe(Disposable d) {
-
+            public Response intercept(Chain chain) throws IOException {
+                Request original = chain.request();
+                Request.Builder requestBuilder = original.newBuilder()
+                        .header("platform", "platform")//平台
+                        .header("sysVersion", "sysVersion")//系统版本号
+                        .header("device", "device")//设备信息
+                        .header("screen", "screen")//屏幕大小
+                        .header("uuid", "uuid")//设备唯一码
+                        .header("version", "version")//app版本
+                        .header("apiVersion", "apiVersion")//api版本
+                        .header("token", "token")//令牌
+                        .header("channelId", "channelId")//渠道
+                        .header("networkType", "networkType");//网络类型
+                Request request = requestBuilder.build();
+                return chain.proceed(request);
             }
-
-            @Override
-            public void onFail(String errorMsg) {
-
-            }
-
-            @Override
-            public void onSuccess(IBaseModel iBaseModel) {
-
-            }
-
-
         });
     }
 }

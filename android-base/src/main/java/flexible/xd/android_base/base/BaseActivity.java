@@ -131,29 +131,10 @@ public abstract class BaseActivity extends AppCompatActivity implements View.OnC
         startActivity(intent);
     }
 
-    private Object cancelObject = new Object();
-
-
-    public <T> void request(int what, Request<T> request, NoHttpListener<T> httpListener) {
-        // 这里设置一个sign给这个请求。
-        request.setCancelSign(cancelObject);
-
-        CallServer.getInstance().add(what, request, new NoHttpManager<T>(request,
-                httpListener));
-    }
-
-    public <T> void request(int what, Request<T> request, NoHttpListener<T> httpListener, boolean isLoad) {
-        // 这里设置一个sign给这个请求。
-        request.setCancelSign(cancelObject);
-
-        CallServer.getInstance().add(what, request, new NoHttpManager<T>(request,
-                httpListener, isLoad, this));
-    }
 
     @Override
     protected void onDestroy() {
         super.onDestroy();
-        CallServer.getInstance().cancelBySign(cancelObject);
         if (disposables != null && !disposables.isDisposed())
             disposables.dispose();
     }

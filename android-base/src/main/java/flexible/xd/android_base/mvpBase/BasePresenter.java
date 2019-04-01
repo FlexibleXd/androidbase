@@ -4,7 +4,7 @@ package flexible.xd.android_base.mvpBase;
 
 import io.reactivex.disposables.CompositeDisposable;
 
-public abstract class BasePresenter<T extends IBaseView,M> implements IPresenter<T> {
+public abstract class BasePresenter<T extends IBaseView,M> implements IBasePresenter<T> {
 
 
     protected T mView;
