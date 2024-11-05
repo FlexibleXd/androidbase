@@ -108,7 +108,7 @@ public class RtfHelper {
             //HEADERS：日志请求和响应头，请求类型，URL，响应状态
             //BODY：日志请求和响应标头和正文
             HttpLoggingInterceptor loggingInterceptor = new HttpLoggingInterceptor(
-                    message -> Log.i("flexible", message)
+                    message -> Log.i("flexible", message )
             );
             loggingInterceptor.setLevel(HttpLoggingInterceptor.Level.BODY);
             okHttpClient.addInterceptor(loggingInterceptor);
