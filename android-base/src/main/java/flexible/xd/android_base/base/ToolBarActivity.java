@@ -33,13 +33,10 @@ public abstract class ToolBarActivity extends BaseActivity implements SwipeBackA
     private Toolbar toolbar;
     private ViewGroup container;
     private ViewGroup frame;
-    private View noNet;
-    private TextView tvRefresh;
-    private View noData;
-    private TextView tvNoData;
+
     public static final String _TITLE = "TB_TITLE";
-    private ImageView ivNoData;
-    private TextView tvNoClick;
+
+
     private Boolean isCheckNet = false;
     private SwipeBackActivityHelper mHelper;
 
@@ -70,128 +67,12 @@ public abstract class ToolBarActivity extends BaseActivity implements SwipeBackA
         super.setContentView(_iView);
     }
 
-    public void setCheckNet(Boolean checkNet) {
-        isCheckNet = checkNet;
-    }
 
 
-    /**
-     * 无网络回调
-     */
-
-    private RefreshOnClickListener refreshOnClickListener;
 
 
-    public void setRefreshOnClickListener(RefreshOnClickListener refreshOnClickListener) {
-        this.refreshOnClickListener = refreshOnClickListener;
-    }
-
-    /**
-     * 无数据回调
-     */
-    private NoDataOnClickListener noDataOnClickListener;
 
 
-    public void setNoDataOnClickListener(NoDataOnClickListener noDataOnClickListener) {
-        this.noDataOnClickListener = noDataOnClickListener;
-    }
-
-
-    /**
-     * 无数据页面初始化 无按钮
-     *
-     * @param imgId 图片资源id
-     * @param text  提示语言
-     */
-
-    public void noDataShow(int imgId, String text) {
-        if (noData == null) {
-            noData = LayoutInflater.from(this).inflate(R.layout.view_no_data, null);
-            tvNoData = noData.findViewById(R.id.tv_no_data);
-            ivNoData = noData.findViewById(R.id.iv_no);
-            tvNoClick = noData.findViewById(R.id.tv_click);
-            LinearLayout.LayoutParams params = new LinearLayout.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT, LinearLayout.LayoutParams.MATCH_PARENT);
-            params.gravity = Gravity.CENTER;
-            getContainer().addView(noData, params);
-        }
-        ivNoData.setImageResource(imgId);
-        tvNoData.setText(text);
-        tvNoClick.setVisibility(View.GONE);
-        noData.setVisibility(View.VISIBLE);
-    }
-
-    /**
-     * 无数据页面初始化 有点击按钮
-     *
-     * @param imgId     图片资源id
-     * @param text      提示语言
-     * @param clickText 按钮文字
-     */
-    public void noDataShow(int imgId, String text, String clickText, NoDataOnClickListener listener) {
-        if (noData == null) {
-            noData = LayoutInflater.from(this).inflate(R.layout.view_no_data, null);
-            tvNoData = noData.findViewById(R.id.tv_no_data);
-            ivNoData = noData.findViewById(R.id.iv_no);
-            tvNoClick = noData.findViewById(R.id.tv_click);
-            LinearLayout.LayoutParams params = new LinearLayout.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT, LinearLayout.LayoutParams.MATCH_PARENT);
-            params.gravity = Gravity.CENTER;
-            getContainer().addView(noData, params);
-        }
-        ivNoData.setImageResource(imgId);
-        tvNoData.setText(text);
-        tvNoClick.setText(clickText);
-        tvNoClick.setVisibility(View.VISIBLE);
-        setNoDataOnClickListener(listener);
-        tvNoClick.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                if (noDataOnClickListener != null)
-                    noDataOnClickListener.onClick();
-            }
-        });
-        noData.setVisibility(View.VISIBLE);
-    }
-
-    /**
-     * 隐藏无数据页面
-     */
-    public void noDataHide() {
-        if (noData != null) {
-            noData.setVisibility(View.GONE);
-        }
-    }
-
-    /**
-     * 无网络 初始化
-     */
-    public void noNet() {
-        if (!isCheckNet) {
-            return;
-        }
-        if (noNet == null) {
-            noNet = LayoutInflater.from(this).inflate(R.layout.view_no_net, null);
-            tvRefresh = noNet.findViewById(R.id.tv_refresh);
-            FrameLayout.LayoutParams params = new FrameLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.MATCH_PARENT);
-            params.gravity = Gravity.CENTER;
-            getContainer().addView(noNet, params);
-        }
-        if (NetworkUtils.isConnected()) {
-            noNet.setVisibility(View.GONE);
-            getContainer().removeView(noNet);
-        } else {
-            noNet.setVisibility(View.VISIBLE);
-        }
-        tvRefresh.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                if (refreshOnClickListener != null) {
-                    refreshOnClickListener.onClick();
-                    noNet.setVisibility(View.GONE);
-                    getContainer().removeView(noNet);
-                }
-            }
-        });
-    }
 
 
     protected int layoutFrameResId() {
