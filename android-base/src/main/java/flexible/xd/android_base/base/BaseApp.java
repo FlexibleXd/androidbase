@@ -4,12 +4,9 @@ import android.app.Activity;
 import android.app.Application;
 import android.content.Context;
 import android.os.Bundle;
-import android.util.Config;
 
-import com.yanzhenjie.nohttp.InitializationConfig;
-import com.yanzhenjie.nohttp.Logger;
-import com.yanzhenjie.nohttp.NoHttp;
-import com.yanzhenjie.nohttp.cache.DBCacheStore;
+
+
 
 
 /**

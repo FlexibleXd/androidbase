@@ -25,7 +25,7 @@ import retrofit2.adapter.rxjava2.RxJava2CallAdapterFactory;
  * email : lgd19940421@163.com
  **/
 public class RtfHelper {
-    private static RtfHelper instance;
+    private static RtfHelper instance ;
     private String rtfBaseUrl;
     private Boolean DEBUG = true;
     private int rtfConnectTimeout = 10;
