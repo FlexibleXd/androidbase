@@ -1,13 +1,31 @@
 package flexible.xd.android_base;
 
-import android.support.v7.app.AppCompatActivity;
+
 import android.os.Bundle;
 
-public class MainActivity extends AppCompatActivity {
+import flexible.xd.android_base.base.BaseActivity;
+
+public class MainActivity extends BaseActivity {
 
     @Override
-    protected void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_main);
+    protected void initView() {
+
     }
+
+    @Override
+    protected void initData() {
+
+    }
+
+    @Override
+    protected void initEvent() {
+
+    }
+
+    @Override
+    protected int layoutId() {
+        return R.layout.flexible__content;
+    }
+
+
 }
