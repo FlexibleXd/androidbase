@@ -3,16 +3,11 @@ package flexible.xd.android_base;
 import android.app.AlertDialog;
 import android.app.Dialog;
 
+import com.alibaba.fastjson.JSON;
+import com.bumptech.glide.Glide;
 
 import org.junit.Test;
-import org.nutz.json.Json;
 
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-
-import flexible.xd.android_base.model.event.LoginEvent;
 import flexible.xd.android_base.mvpBase.IBaseModel;
 import flexible.xd.android_base.network.rtfhttp.RtfHelper;
 import flexible.xd.android_base.network.rtfhttp.Transformer;
@@ -29,28 +24,31 @@ import static junit.framework.Assert.assertEquals;
 public class ExampleUnitTest {
     @Test
     public void addition_isCorrect() throws Exception {
-
-    }
-
-    @Test
-    public void nutz() {
-        List<User> userList = new ArrayList<>();
-        for (int i = 0; i < 3; i++) {
-            User u = new User();
-            u.setName(i + "");
-            u.setPhone("18653679189");
-            userList.add(u);
-        }
-        System.out.println(Json.toJson(userList));
-        Map<String, Object> param = new HashMap<>();
-        param.put("a", Json.toJson(userList));
-        Body body = new Body();
-        body.setData(Json.toJson(userList));
-        System.out.println(param);
-        System.out.println(Json.toJson(body));
+        assertEquals(4, 2 + 2);
     }
 
     @Test
     public void rtfTest() {
+        RtfHelper.getInstance().init("");
+        RtfHelper.getInstance().init("", 10, 10, 10);
+        RtfHelper.getInstance().getApiService(ApiService.class).login("","").compose(Transformer.schedule())
+                .subscribe(new BaseObserver<IBaseModel>() {
+            @Override
+            public void doOnSubscribe(Disposable d) {
+
+            }
+
+            @Override
+            public void onFail(String errorMsg) {
+
+            }
+
+            @Override
+            public void onSuccess(IBaseModel iBaseModel) {
+
+            }
+
+
+        });
     }
 }

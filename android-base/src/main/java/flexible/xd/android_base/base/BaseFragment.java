@@ -116,24 +116,6 @@ public abstract class BaseFragment extends Fragment implements View.OnClickListe
         showShort(resource);
     }
 
-    private Object cancelObject = new Object();
-
-    public <T> void request(int what, Request<T> request, NoHttpListener<T> httpListener) {
-        // 这里设置一个sign给这个请求。
-        request.setCancelSign(cancelObject);
-
-        CallServer.getInstance().add(what, request, new NoHttpManager<T>(request,
-                httpListener));
-    }
-
-
-    public <T> void request(int what, Request<T> request, NoHttpListener<T> httpListener, boolean isLoad) {
-        // 这里设置一个sign给这个请求。
-        request.setCancelSign(cancelObject);
-
-        CallServer.getInstance().add(what, request, new NoHttpManager<T>(request,
-                httpListener, isLoad, getActivity()));
-    }
 
     @Override
     public void onClick(View v) {
@@ -143,7 +125,6 @@ public abstract class BaseFragment extends Fragment implements View.OnClickListe
     @Override
     public void onDestroy() {
         super.onDestroy();
-        CallServer.getInstance().cancelBySign(cancelObject);
         if (disposables != null && !disposables.isDisposed())
             disposables.dispose();
     }
