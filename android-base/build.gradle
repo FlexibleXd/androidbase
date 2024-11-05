@@ -9,7 +9,7 @@ plugins {
 
 
 android {
-    namespace 'com.flexible.androidbase'
+    namespace 'flexible.xd.android_base'
     compileSdkVersion 34
 
     defaultConfig {
