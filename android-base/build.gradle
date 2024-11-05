@@ -2,8 +2,9 @@
 //apply plugin: 'com.github.dcendents.android-maven'
 //apply plugin: 'com.jfrog.bintray'
 plugins {
-    id 'com.android.library'
+
     id 'maven-publish'
+    id 'com.android.application'
 }
 
 

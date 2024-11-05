@@ -16,5 +16,5 @@ dependencyResolutionManagement {
     }
 }
 
-include ':app', ':android-base'
+include ':android-base'
 
