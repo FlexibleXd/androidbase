@@ -2,8 +2,11 @@ package flexible.xd.android_base.base;
 
 import android.app.Activity;
 import android.content.Context;
+
+import com.blankj.utilcode.util.LogUtils;
+
 import java.util.Stack;
-import flexible.xd.android_base.utils.LogUtils;
+
 
 /**
  * 应用程序Activity管理类：用于Activity管理和应用程序退出
@@ -88,7 +91,7 @@ public class AppManager {
     public void appExit(Context context) {
         try {
             finishAllActivity();
-            LogUtils.LOGE(TAG,"-----exit----android.os.Process.killProcess------");
+            LogUtils.e(TAG,"-----exit----android.os.Process.killProcess------");
             //杀死该应用进程
             android.os.Process.killProcess(android.os.Process.myPid());
             /**
@@ -103,10 +106,10 @@ public class AppManager {
              * What actually happens is that the process is killed and immediately restarted
              * with one fewer activity on the stack.
              */
-             LogUtils.LOGE(TAG,"-----exit------System.exit(0)-----");
+             LogUtils.e(TAG,"-----exit------System.exit(0)-----");
             System.exit(0);
         } catch (Exception e) {
-            LogUtils.LOGE(TAG,"-----exit----android.os.Process.killProcess------" + e);
+            LogUtils.e(TAG,"-----exit----android.os.Process.killProcess------" + e);
             android.os.Process.killProcess(android.os.Process.myPid());
         }
     }

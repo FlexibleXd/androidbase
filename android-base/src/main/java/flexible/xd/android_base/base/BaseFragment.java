@@ -13,7 +13,7 @@ import android.view.ViewGroup;
 import android.widget.FrameLayout;
 
 
-import com.yanzhenjie.nohttp.rest.Request;
+import com.blankj.utilcode.util.ToastUtils;
 
 import java.io.Serializable;
 
@@ -22,7 +22,7 @@ import flexible.xd.android_base.R;
 import io.reactivex.disposables.CompositeDisposable;
 import io.reactivex.disposables.Disposable;
 
-import static flexible.xd.android_base.utils.ToastUtil.showShort;
+
 
 /**
  * Created by flexibleXd on 2016/12/22.
@@ -107,11 +107,11 @@ public abstract class BaseFragment extends Fragment implements View.OnClickListe
     }
 
     public void toast(String content) {
-        showShort(content);
+        ToastUtils. showShort(content);
     }
 
     public void toast(int resource) {
-        showShort(resource);
+        ToastUtils.showShort(resource);
     }
 
 

@@ -12,6 +12,9 @@ import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
+import com.blankj.utilcode.util.NetworkUtils;
+import com.blankj.utilcode.util.StringUtils;
+
 import flexible.xd.android_base.R;
 import flexible.xd.android_base.model.listener.NoDataOnClickListener;
 import flexible.xd.android_base.model.listener.RefreshOnClickListener;
@@ -19,8 +22,7 @@ import flexible.xd.android_base.swipeBack.SwipeBackActivityBase;
 import flexible.xd.android_base.swipeBack.SwipeBackActivityHelper;
 import flexible.xd.android_base.swipeBack.SwipeBackLayout;
 import flexible.xd.android_base.swipeBack.Utils;
-import flexible.xd.android_base.utils.NetworkUtils;
-import flexible.xd.android_base.utils.StringUtils;
+
 
 
 /**
@@ -64,7 +66,7 @@ public abstract class ToolBarActivity extends BaseActivity implements SwipeBackA
                     FrameLayout.LayoutParams.MATCH_PARENT);
             getContainer().addView(append, layoutParams);
         }
-        noNet();
+
         super.setContentView(_iView);
     }
 
