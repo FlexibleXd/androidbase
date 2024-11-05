@@ -38,7 +38,7 @@ jobs:
           java-version: 21
       - uses: gradle/gradle-build-action@v2
       - name: Publish Package permission
-        run: git update-index --chmod=+x gradlew publish
+        run: git update-index --chmod=+x ./gradlew publish
       - name: Publish Package
         run: ./gradlew publish
         env:
