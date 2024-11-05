@@ -36,6 +36,18 @@ android {
             withJavadocJar()
         }
     }
+    publishing {
+        repositories {
+            maven {
+                name = "androidbase"
+                url = "https://github.com/FlexibleXd/androidbase"
+                credentials {
+                    username = System.getenv("GITHUB_ACTOR")
+                    password = System.getenv("GITHUB_TOKEN")
+                }
+            }
+        }
+    }
 }
 
 dependencies {
@@ -51,6 +63,8 @@ dependencies {
 
 
 }
+
+
 
 publishing {
     repositories {
