@@ -79,7 +79,7 @@ afterEvaluate {
 
                 group = 'flexible.xd'
                 artifactId = 'android-base'
-                version = '1.1.18'
+                version = '1.1.19'
 
                 pom {
                     name = 'android-base'
