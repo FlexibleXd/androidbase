@@ -54,7 +54,7 @@ dependencies {
     api 'com.squareup.retrofit2:adapter-rxjava2:2.4.0'
     api 'com.blankj:utilcodex:1.31.0'
     api 'com.alibaba:fastjson:1.2.54'
-    implementation(platform("org.jetbrains.kotlin:kotlin-bom:1.8.0"))
+//    implementation(platform("org.jetbrains.kotlin:kotlin-bom:1.8.0"))
 
 }
 
